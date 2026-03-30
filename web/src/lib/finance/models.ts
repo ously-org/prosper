@@ -60,3 +60,30 @@ export class GrowthRate {
     this.rate = config.rate;
   }
 }
+
+export interface FinancialNodeConfig {
+  id: string;
+  name: string;
+  date: Date;
+  assets: Asset[];
+  expenses: Expense[];
+  parentId?: string;
+}
+
+export class FinancialNode {
+  id: string;
+  name: string;
+  date: Date;
+  assets: Asset[];
+  expenses: Expense[];
+  parentId?: string;
+
+  constructor(config: FinancialNodeConfig) {
+    this.id = config.id;
+    this.name = config.name;
+    this.date = config.date;
+    this.assets = config.assets;
+    this.expenses = config.expenses;
+    this.parentId = config.parentId;
+  }
+}
