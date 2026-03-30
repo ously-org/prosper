@@ -26,10 +26,10 @@
     - [x] Write unit tests for adding Action Nodes and linking them within the tree structure.
     - [x] Implement a modal/form for adding financial actions (e.g., "Change Career").
     - [x] Verify nodes can be successfully added to any branch in the tree.
-- [ ] **Task: Phase 2.3: Scenario Branching Logic (Forking)**
-    - [ ] Write unit tests for the "Fork" functionality, creating a new scenario from any node.
-    - [ ] Implement logic to duplicate and modify a branch to create a parallel financial scenario.
-    - [ ] Verify that changes in a branch only affect its downstream nodes and do not impact other branches.
+- [x] **Task: Phase 2.3: Scenario Branching Logic (Forking)** [1935aa2]
+    - [x] Write unit tests for the "Fork" functionality, creating a new scenario from any node.
+    - [x] Implement logic to duplicate and modify a branch to create a parallel financial scenario.
+    - [x] Verify that changes in a branch only affect its downstream nodes and do not impact other branches.
 - [ ] **Task: Conductor - User Manual Verification 'Phase 2: Node Tree UI' (Protocol in workflow.md)**
 
 ## Phase 3: Goal Tracking & Summaries
