@@ -22,10 +22,10 @@
     - [x] Write component tests for the graphical node tree using shadcn/ui and a graph visualization library.
     - [x] Implement the Root Node (The Present) and basic branching visualization.
     - [x] Verify nodes are rendered correctly and sorted by date.
-- [ ] **Task: Phase 2.2: Node Creation & Linking**
-    - [ ] Write unit tests for adding Action Nodes and linking them within the tree structure.
-    - [ ] Implement a modal/form for adding financial actions (e.g., "Change Career").
-    - [ ] Verify nodes can be successfully added to any branch in the tree.
+- [x] **Task: Phase 2.2: Node Creation & Linking** [7fca284]
+    - [x] Write unit tests for adding Action Nodes and linking them within the tree structure.
+    - [x] Implement a modal/form for adding financial actions (e.g., "Change Career").
+    - [x] Verify nodes can be successfully added to any branch in the tree.
 - [ ] **Task: Phase 2.3: Scenario Branching Logic (Forking)**
     - [ ] Write unit tests for the "Fork" functionality, creating a new scenario from any node.
     - [ ] Implement logic to duplicate and modify a branch to create a parallel financial scenario.
