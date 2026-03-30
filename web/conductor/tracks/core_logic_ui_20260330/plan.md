@@ -2,18 +2,18 @@
 
 ## Phase 1: Core Financial Planning Engine
 
-- [ ] **Task: Phase 1.1: Core Data Models**
-    - [ ] Write unit tests for financial asset, expense, and growth rate data structures.
-    - [ ] Implement TypeScript interfaces and classes for Assets, Expenses, and Growth Rates.
-    - [ ] Verify models correctly handle various asset types (Stocks, Cash, Real Estate).
-- [ ] **Task: Phase 1.2: Single-Branch Projection Engine**
-    - [ ] Write unit tests for a 10-year projection with compound growth.
-    - [ ] Implement the core projection function to calculate net worth over time.
-    - [ ] Verify accuracy against a set of baseline financial scenarios.
-- [ ] **Task: Phase 1.3: Multi-Year Simulation Logic**
-    - [ ] Write unit tests for a 50-year simulation including recurring expenses and inflation.
-    - [ ] Extend the engine to handle long-term projections and real-time environment variables (e.g., ROI).
-    - [ ] Verify the engine can handle custom growth rates per asset type.
+- [x] **Task: Phase 1.1: Core Data Models** [6834afb]
+    - [x] Write unit tests for financial asset, expense, and growth rate data structures.
+    - [x] Implement TypeScript interfaces and classes for Assets, Expenses, and Growth Rates.
+    - [x] Verify models correctly handle various asset types (Stocks, Cash, Real Estate).
+- [x] **Task: Phase 1.2: Single-Branch Projection Engine** [44d8b90]
+    - [x] Write unit tests for a 10-year projection with compound growth.
+    - [x] Implement the core projection function to calculate net worth over time.
+    - [x] Verify accuracy against a set of baseline financial scenarios.
+- [x] **Task: Phase 1.3: Multi-Year Simulation Logic** [a09f347]
+    - [x] Write unit tests for a 50-year simulation including recurring expenses and inflation.
+    - [x] Extend the engine to handle long-term projections and real-time environment variables (e.g., ROI).
+    - [x] Verify the engine can handle custom growth rates per asset type.
 - [ ] **Task: Conductor - User Manual Verification 'Phase 1: Financial Engine' (Protocol in workflow.md)**
 
 ## Phase 2: Node Tree & Branching UI
