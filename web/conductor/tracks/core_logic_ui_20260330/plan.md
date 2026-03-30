@@ -1,6 +1,6 @@
 # Implementation Plan: core_logic_ui_20260330
 
-## Phase 1: Core Financial Planning Engine
+## Phase 1: Core Financial Planning Engine [checkpoint: d6be1a1]
 
 - [x] **Task: Phase 1.1: Core Data Models** [6834afb]
     - [x] Write unit tests for financial asset, expense, and growth rate data structures.
@@ -14,7 +14,7 @@
     - [x] Write unit tests for a 50-year simulation including recurring expenses and inflation.
     - [x] Extend the engine to handle long-term projections and real-time environment variables (e.g., ROI).
     - [x] Verify the engine can handle custom growth rates per asset type.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 1: Financial Engine' (Protocol in workflow.md)**
+- [x] **Task: Conductor - User Manual Verification 'Phase 1: Financial Engine' (Protocol in workflow.md)** [d6be1a1]
 
 ## Phase 2: Node Tree & Branching UI
 
