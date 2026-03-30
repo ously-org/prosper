@@ -18,10 +18,10 @@
 
 ## Phase 2: Node Tree & Branching UI
 
-- [ ] **Task: Phase 2.1: Basic Node Tree Visualization**
-    - [ ] Write component tests for the graphical node tree using shadcn/ui and a graph visualization library.
-    - [ ] Implement the Root Node (The Present) and basic branching visualization.
-    - [ ] Verify nodes are rendered correctly and sorted by date.
+- [x] **Task: Phase 2.1: Basic Node Tree Visualization** [8f14597]
+    - [x] Write component tests for the graphical node tree using shadcn/ui and a graph visualization library.
+    - [x] Implement the Root Node (The Present) and basic branching visualization.
+    - [x] Verify nodes are rendered correctly and sorted by date.
 - [ ] **Task: Phase 2.2: Node Creation & Linking**
     - [ ] Write unit tests for adding Action Nodes and linking them within the tree structure.
     - [ ] Implement a modal/form for adding financial actions (e.g., "Change Career").
