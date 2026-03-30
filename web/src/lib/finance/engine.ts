@@ -1,4 +1,4 @@
-import { Asset, Expense } from './models';
+import { Asset, Expense, FinancialNode } from './models';
 
 export interface ProjectionResult {
   year: number;
@@ -23,7 +23,7 @@ export class ProjectionEngine {
     const globalROI = env.globalROIModifier ?? 0;
     
     // Initial state (Year 0)
-    let currentAssets = assets.map(a => new Asset({ ...a }));
+    const currentAssets = assets.map(a => new Asset({ ...a }));
     
     results[0] = {
       year: 0,
@@ -39,7 +39,7 @@ export class ProjectionEngine {
 
       // 2. Calculate expenses with inflation
       const totalYearlyExpenses = expenses.reduce((total, expense) => {
-        let amount = expense.amount;
+        const amount = expense.amount;
         // Apply inflation: amount * (1 + inflation) ^ year-1 (first year is base)
         // Wait, usually inflation is applied starting from second year if Year 1 is today's dollars
         // Let's assume Year 1 already has 1 year of inflation applied if we are projecting into the FUTURE.

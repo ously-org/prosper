@@ -107,6 +107,62 @@ button:focus-visible {
 }
 
 @theme inline {
+  --font-headline: 'Inter Variable', sans-serif;
+  --font-body: 'Inter Variable', sans-serif;
+  --font-label: 'Inter Variable', sans-serif;
+
+  --color-primary-container: #d8e2ff;
+  --color-on-secondary: #f6f9ff;
+  --color-tertiary-fixed-dim: #7aec8c;
+  --color-on-surface: #2a3439;
+  --color-on-primary-fixed-variant: #0058bb;
+  --color-on-secondary-fixed: #374049;
+  --color-surface-container-low: #f0f4f7;
+  --color-tertiary-dim: #006126;
+  --color-on-tertiary-fixed-variant: #006a2a;
+  /* --color-secondary: #576069; */
+  --color-on-primary-container: #004fa8;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-primary-fixed: #003d85;
+  --color-on-error: #fff7f6;
+  --color-surface-container-high: #e1e9ee;
+  --color-on-secondary-container: #4a535c;
+  --color-secondary-dim: #4b545d;
+  --color-primary-fixed-dim: #c2d4ff;
+  --color-error-dim: #4e0309;
+  --color-surface-tint: #005bc0;
+  --color-primary-fixed: #d8e2ff;
+  --color-surface: #f8f9fb;
+  --color-on-error-container: #752121;
+  --color-inverse-primary: #4a8eff;
+  --color-secondary-container: #dae3ef;
+  --color-surface-dim: #cfdce3;
+  --color-error-container: #fe8983;
+  --color-error: #9f403d;
+  --color-surface-container: #e8eff3;
+  --color-inverse-on-surface: #9a9d9f;
+  --color-on-tertiary: #e9ffe5;
+  --color-secondary-fixed: #dae3ef;
+  --color-inverse-surface: #0b0f10;
+  --color-on-tertiary-fixed: #004a1b;
+  --color-surface-container-highest: #d9e4ea;
+  /* --color-background: #f8f9fb; */
+  --color-surface-variant: #d9e4ea;
+  --color-on-primary: #f7f7ff;
+  --color-on-surface-variant: #566166;
+  --color-secondary-fixed-dim: #ccd5e0;
+  --color-tertiary-fixed: #88fb99;
+  --color-outline-variant: #a9b4b9;
+  --color-tertiary-container: #88fb99;
+  --color-on-secondary-fixed-variant: #535c66;
+  /* --color-primary: #005bc0; */
+  --color-on-background: #2a3439;
+  --color-outline: #717c82;
+  --color-surface-bright: #f8f9fb;
+  --color-primary-dim: #004fa9;
+  --color-on-tertiary-container: #005f25;
+  --color-tertiary: #006e2c;
+
   --font-heading: var(--font-sans);
   --font-sans: 'Inter Variable', sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
@@ -193,4 +249,30 @@ button:focus-visible {
   html {
     @apply font-sans;
   }
+}
+
+.git-line {
+  width: 2px;
+  background-color: #a9b4b9;
+  position: absolute;
+  left: 9px;
+  top: 24px;
+  bottom: -8px;
+}
+.git-line-last {
+  display: none;
+}
+/* Custom scrollbar for a cleaner look like Linear */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
