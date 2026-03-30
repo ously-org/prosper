@@ -87,4 +87,18 @@ export class ProjectionEngine {
   private calculateNetWorth(assets: Asset[]): number {
     return assets.reduce((sum, asset) => sum + asset.value, 0);
   }
+
+  projectPath(
+    path: FinancialNode[],
+    env: Environment = {}
+  ): Record<number, ProjectionResult> {
+    // This is a more complex simulation that handles events at specific dates.
+    // For now, let's just combine all assets and expenses from the path and project for a fixed duration.
+    // In a real implementation, we'd process nodes chronologically.
+    const allAssets = path.flatMap(node => node.assets);
+    const allExpenses = path.flatMap(node => node.expenses);
+    
+    // Default to 30 years if no duration specified, or based on node dates
+    return this.project(allAssets, allExpenses, 30, env);
+  }
 }

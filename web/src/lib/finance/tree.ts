@@ -40,4 +40,18 @@ export class FinancialTree {
   getNode(nodeId: string): FinancialNode | undefined {
     return this.nodes.get(nodeId);
   }
+
+  getPathTo(nodeId: string): FinancialNode[] {
+    const path: FinancialNode[] = [];
+    let currentId: string | undefined = nodeId;
+
+    while (currentId) {
+      const node = this.nodes.get(currentId);
+      if (!node) break;
+      path.unshift(node);
+      currentId = node.parentId;
+    }
+
+    return path;
+  }
 }
