@@ -18,12 +18,13 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 
-const chartData = [
-  { category: "equities", value: 842100, fill: "var(--color-equities)" },
-  { category: "realestate", value: 450000, fill: "var(--color-realestate)" },
-  { category: "crypto", value: 125803, fill: "var(--color-crypto)" },
-  { category: "cash", value: 65000, fill: "var(--color-cash)" },
-];
+import { MOCK_ASSETS } from "./asset-breakdown-table";
+
+const chartData = MOCK_ASSETS.map((asset) => ({
+  category: asset.id,
+  value: asset.value,
+  fill: asset.color,
+}));
 
 const chartConfig = {
   value: {

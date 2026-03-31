@@ -1,3 +1,11 @@
+interface FinanceSummary {
+  lastUpdated: string;
+}
+
+const MOCK_SUMMARY: FinanceSummary = {
+  lastUpdated: "2023-10-27 14:42:01 UTC",
+};
+
 export function Header() {
   return (
     <header className="mb-8 flex justify-between items-end">
@@ -15,7 +23,7 @@ export function Header() {
             Last Updated
           </p>
           <p className="font-mono text-xs text-foreground">
-            2023-10-27 14:42:01 UTC
+            {MOCK_SUMMARY.lastUpdated}
           </p>
         </div>
       </div>

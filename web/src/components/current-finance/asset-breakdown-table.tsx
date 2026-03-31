@@ -10,6 +10,50 @@ import {
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 
+export interface AssetCategory {
+  id: string;
+  label: string;
+  value: number;
+  color: string;
+  performance: number;
+  allocation: number;
+}
+
+export const MOCK_ASSETS: AssetCategory[] = [
+  {
+    id: "equities",
+    label: "Equities (US Stocks)",
+    value: 842100,
+    color: "var(--color-equities)",
+    performance: 1.24,
+    allocation: 56.8,
+  },
+  {
+    id: "realestate",
+    label: "Real Estate",
+    value: 450000,
+    color: "var(--color-realestate)",
+    performance: 0.0,
+    allocation: 30.3,
+  },
+  {
+    id: "crypto",
+    label: "Crypto Assets",
+    value: 125803.42,
+    color: "var(--color-crypto)",
+    performance: -2.81,
+    allocation: 8.5,
+  },
+  {
+    id: "cash",
+    label: "Cash & Equivalents",
+    value: 65000,
+    color: "var(--color-cash)",
+    performance: 0.01,
+    allocation: 4.4,
+  },
+];
+
 export function AssetBreakdownTable() {
   return (
     <Card className="col-span-12 xl:col-span-8 bg-surface-container overflow-hidden flex flex-col shadow-sm border border-border/20">
@@ -17,7 +61,10 @@ export function AssetBreakdownTable() {
         <CardTitle className="text-sm font-bold uppercase tracking-widest text-foreground">
           Asset Breakdown
         </CardTitle>
-        <Button variant="link" className="h-auto p-0 text-xs text-primary font-bold hover:underline cursor-pointer">
+        <Button
+          variant="link"
+          className="h-auto p-0 text-xs text-primary font-bold hover:underline cursor-pointer"
+        >
           Export CSV
         </Button>
       </CardHeader>
@@ -40,110 +87,60 @@ export function AssetBreakdownTable() {
             </TableRow>
           </TableHeader>
           <TableBody className="divide-y divide-border/20">
-            <TableRow className="hover:bg-surface-container-highest transition-colors group cursor-default border-b border-border/20">
-              <TableCell className="px-6 py-4 flex items-center gap-3 border-0">
-                <div className="w-2 h-2 rounded-full bg-primary" />
-                <span className="text-sm font-medium text-foreground">
-                  Equities (US Stocks)
-                </span>
-              </TableCell>
-              <TableCell className="px-6 py-4 font-mono text-sm text-foreground border-0">
-                $842,100.00
-              </TableCell>
-              <TableCell className="px-6 py-4 text-right border-0">
-                <span className="text-chart-2 text-xs font-mono font-medium">
-                  +1.24%
-                </span>
-              </TableCell>
-              <TableCell className="px-6 py-4 text-right border-0">
-                <div className="flex items-center justify-end gap-2">
-                  <span className="font-mono text-xs text-foreground">
-                    56.8%
+            {MOCK_ASSETS.map((asset) => (
+              <TableRow
+                key={asset.id}
+                className="hover:bg-surface-container-highest transition-colors group cursor-default border-b border-border/20 last:border-0"
+              >
+                <TableCell className="px-6 py-4 flex items-center gap-3 border-0">
+                  <div
+                    className="w-2 h-2 rounded-full"
+                    style={{ backgroundColor: asset.color }}
+                  />
+                  <span className="text-sm font-medium text-foreground">
+                    {asset.label}
                   </span>
-                  <div className="w-16">
-                    <Progress value={56.8} className="h-1 bg-surface-container-high" />
-                  </div>
-                </div>
-              </TableCell>
-            </TableRow>
-            <TableRow className="hover:bg-surface-container-highest transition-colors group cursor-default border-b border-border/20">
-              <TableCell className="px-6 py-4 flex items-center gap-3 border-0">
-                <div className="w-2 h-2 rounded-full bg-chart-2" />
-                <span className="text-sm font-medium text-foreground">
-                  Real Estate
-                </span>
-              </TableCell>
-              <TableCell className="px-6 py-4 font-mono text-sm text-foreground border-0">
-                $450,000.00
-              </TableCell>
-              <TableCell className="px-6 py-4 text-right border-0">
-                <span className="text-muted-foreground text-xs font-mono font-medium">
-                  0.00%
-                </span>
-              </TableCell>
-              <TableCell className="px-6 py-4 text-right border-0">
-                <div className="flex items-center justify-end gap-2">
-                  <span className="font-mono text-xs text-foreground">
-                    30.3%
+                </TableCell>
+                <TableCell className="px-6 py-4 font-mono text-sm text-foreground border-0">
+                  ${asset.value.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </TableCell>
+                <TableCell className="px-6 py-4 text-right border-0">
+                  <span
+                    className={`text-xs font-mono font-medium ${
+                      asset.performance > 0
+                        ? "text-chart-2"
+                        : asset.performance < 0
+                          ? "text-destructive"
+                          : "text-muted-foreground"
+                    }`}
+                  >
+                    {asset.performance > 0 ? "+" : ""}
+                    {asset.performance.toFixed(2)}%
                   </span>
-                  <div className="w-16">
-                    <Progress value={30.3} className="h-1 bg-surface-container-high [&>div]:bg-chart-2" />
+                </TableCell>
+                <TableCell className="px-6 py-4 text-right border-0">
+                  <div className="flex items-center justify-end gap-2">
+                    <span className="font-mono text-xs text-foreground">
+                      {asset.allocation}%
+                    </span>
+                    <div className="w-16">
+                      <Progress
+                        value={asset.allocation}
+                        className="h-1 bg-surface-container-high"
+                        style={
+                          {
+                            "--progress-foreground": asset.color,
+                          } as React.CSSProperties
+                        }
+                      />
+                    </div>
                   </div>
-                </div>
-              </TableCell>
-            </TableRow>
-            <TableRow className="hover:bg-surface-container-highest transition-colors group cursor-default border-b border-border/20">
-              <TableCell className="px-6 py-4 flex items-center gap-3 border-0">
-                <div className="w-2 h-2 rounded-full bg-destructive" />
-                <span className="text-sm font-medium text-foreground">
-                  Crypto Assets
-                </span>
-              </TableCell>
-              <TableCell className="px-6 py-4 font-mono text-sm text-foreground border-0">
-                $125,803.42
-              </TableCell>
-              <TableCell className="px-6 py-4 text-right border-0">
-                <span className="text-destructive text-xs font-mono font-medium">
-                  -2.81%
-                </span>
-              </TableCell>
-              <TableCell className="px-6 py-4 text-right border-0">
-                <div className="flex items-center justify-end gap-2">
-                  <span className="font-mono text-xs text-foreground">
-                    8.5%
-                  </span>
-                  <div className="w-16">
-                    <Progress value={8.5} className="h-1 bg-surface-container-high [&>div]:bg-destructive" />
-                  </div>
-                </div>
-              </TableCell>
-            </TableRow>
-            <TableRow className="hover:bg-surface-container-highest transition-colors group cursor-default border-0">
-              <TableCell className="px-6 py-4 flex items-center gap-3 border-0">
-                <div className="w-2 h-2 rounded-full bg-muted-foreground" />
-                <span className="text-sm font-medium text-foreground">
-                  Cash & Equivalents
-                </span>
-              </TableCell>
-              <TableCell className="px-6 py-4 font-mono text-sm text-foreground border-0">
-                $65,000.00
-              </TableCell>
-              <TableCell className="px-6 py-4 text-right border-0">
-                <span className="text-chart-2 text-xs font-mono font-medium">
-                  +0.01%
-                </span>
-              </TableCell>
-              <TableCell className="px-6 py-4 text-right border-0">
-                <div className="flex items-center justify-end gap-2">
-                  <span className="font-mono text-xs text-foreground">
-                    4.4%
-                  </span>
-                  <div className="w-16">
-                    <Progress value={4.4} className="h-1 bg-surface-container-high [&>div]:bg-muted-foreground" />
-                  </div>
-                </div>
-              </TableCell>
-            </TableRow>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </CardContent>

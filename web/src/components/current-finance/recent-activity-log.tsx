@@ -3,7 +3,23 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-const ACTIVITIES = [
+interface Activity {
+  category: string;
+  title: string;
+  date: string;
+  amount: string;
+  variant:
+    | "chart-2"
+    | "destructive"
+    | "primary"
+    | "default"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link";
+}
+
+const MOCK_ACTIVITIES: Activity[] = [
   {
     category: "DIVIDEND",
     title: "AAPL_Q3_PAYOUT",
@@ -50,7 +66,7 @@ export function RecentActivityLog() {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0 space-y-4">
-        {ACTIVITIES.map((item, idx) => (
+        {MOCK_ACTIVITIES.map((item: Activity, idx: number) => (
           <div
             key={idx}
             className="grid grid-cols-[100px_1fr_auto] items-start gap-3 group"
