@@ -1,0 +1,67 @@
+:root {
+  /*
+   * DESIGN.md - The Precision Architect
+   */
+  --sl-color-black: #ffffff;
+  --sl-color-white: #0e0e10;
+
+  /* Global Canvas (Background) */
+  --sl-color-bg: #0e0e10;
+
+  /* Primary Workspace (surface_container) */
+  --sl-color-bg-nav: #131316; /* surface_container_low */
+  --sl-color-bg-sidebar: #131316; /* surface_container_low */
+
+  /* Content Cards (surface_container) */
+  --sl-color-gray-6: #19191d;
+
+  /* High-Precision Blue */
+  --sl-color-accent: #0969da;
+  --sl-color-accent-high: #adc6ff;
+  --sl-color-accent-low: #004493;
+
+  /* No-Line rule - reduce border opacity/remove completely where possible */
+  --sl-color-hairline-light: rgba(255,255,255,0.05);
+  --sl-color-hairline: rgba(255,255,255,0.05);
+
+  /* Typography */
+  --sl-font: "Inter", sans-serif;
+  --sl-font-mono: "JetBrains Mono", monospace;
+}
+
+:root[data-theme='light'] {
+    /* Global Canvas (Background) */
+    --sl-color-bg: #0e0e10;
+
+    /* Primary Workspace (surface_container) */
+    --sl-color-bg-nav: #131316; /* surface_container_low */
+    --sl-color-bg-sidebar: #131316; /* surface_container_low */
+
+    /* Content Cards (surface_container) */
+    --sl-color-gray-6: #19191d;
+
+    --sl-color-white: #0e0e10;
+    --sl-color-black: #ffffff;
+    --sl-color-text-accent: #adc6ff;
+    --sl-color-text: #ffffff;
+    --sl-color-gray-1: #ececec;
+    --sl-color-gray-2: #c0c0c0;
+    --sl-color-gray-3: #888888;
+    --sl-color-gray-4: #555555;
+    --sl-color-gray-5: #222222;
+}
+
+/* Custom styles mimicking the "no-line" and "glass" aesthetic */
+.sl-container {
+    background-color: var(--sl-color-bg) !important;
+}
+
+.starlight-sidebar {
+    background-color: var(--sl-color-bg-sidebar);
+    border-right: none;
+}
+
+.sl-nav {
+    background-color: var(--sl-color-bg-nav);
+    border-bottom: none;
+}

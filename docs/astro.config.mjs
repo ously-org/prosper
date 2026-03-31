@@ -14,22 +14,22 @@ export default defineConfig({
 						link: '/getting-started',
 					}],
 					footerText: //optional
-						'Built & designed by [Six](https://six.technology).'
+						'Built & designed by [Prosper](https://prosper.dev).'
 				})
 			],
-			title: 'My Docs',
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
+			title: 'Prosper',
+            customCss: [
+                './src/styles/custom.css',
+            ],
+			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/prosper' }],
 			sidebar: [
 				{
-					label: 'Guides',
+					label: 'Intro',
 					items: [
 						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
+						{ label: 'Introduction', slug: 'intro' },
+                        { label: 'Getting Started', slug: 'getting-started' },
 					],
-				},
-				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
 				},
 			],
 		}),
