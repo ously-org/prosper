@@ -15,7 +15,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { ChevronRightIcon } from "lucide-react";
-import type { NavGroup, NavSubItem } from "@/lib/const";
+import type { NavGroup, NavItem, NavSubItem } from "@/lib/system.model";
 import { SIDEBAR_SUBITEM_LIMIT } from "@/lib/const";
 
 export function NavMain({ groups }: { groups: NavGroup[] }) {
@@ -27,7 +27,7 @@ export function NavMain({ groups }: { groups: NavGroup[] }) {
         <SidebarGroup key={group.label || "default"}>
           {group.label && <SidebarGroupLabel>{group.label}</SidebarGroupLabel>}
           <SidebarMenu>
-            {group.items.map((item) => {
+            {group.items.map((item: NavItem) => {
               const hasSubItems = item.items && item.items.length > 0;
               const isItemActive =
                 location.pathname === item.url ||
@@ -63,7 +63,7 @@ export function NavMain({ groups }: { groups: NavGroup[] }) {
                       </CollapsibleTrigger>
                       <CollapsibleContent>
                         <SidebarMenuSub>
-                          {shownItems.map((subItem) => (
+                          {shownItems.map((subItem: NavSubItem) => (
                             <SidebarMenuSubItem key={subItem.title}>
                               <SidebarMenuSubButton
                                 asChild

@@ -7,7 +7,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import type { NavItem } from "@/lib/const";
+import type { NavItem } from "@/lib/system.model";
 
 export function NavSecondary({
   items,
