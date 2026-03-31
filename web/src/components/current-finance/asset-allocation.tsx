@@ -1,20 +1,92 @@
+"use client";
+
+import { TrendingUp } from "lucide-react";
+import { Pie, PieChart } from "recharts";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "@/components/ui/chart";
+
+const chartData = [
+  { category: "equities", value: 842100, fill: "var(--color-equities)" },
+  { category: "realestate", value: 450000, fill: "var(--color-realestate)" },
+  { category: "crypto", value: 125803, fill: "var(--color-crypto)" },
+  { category: "cash", value: 65000, fill: "var(--color-cash)" },
+];
+
+const chartConfig = {
+  value: {
+    label: "Market Value ($)",
+  },
+  equities: {
+    label: "Equities",
+    color: "var(--chart-1)",
+  },
+  realestate: {
+    label: "Real Estate",
+    color: "var(--chart-2)",
+  },
+  crypto: {
+    label: "Crypto Assets",
+    color: "var(--chart-3)",
+  },
+  cash: {
+    label: "Cash & Eq.",
+    color: "var(--chart-4)",
+  },
+} satisfies ChartConfig;
+
 export function AssetAllocation() {
   return (
-    <div className="col-span-12 lg:col-span-4 bg-surface-container rounded-md p-6 border-l-[3px] border-chart-2 shadow-sm flex flex-col items-center justify-center">
-      <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest block mb-4 text-center w-full">
-        Asset Allocation
-      </span>
-      <div className="flex items-center justify-center relative h-32 w-full">
-        {/* Minimal Doughnut Simulation */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-24 h-24 rounded-sm border-[12px] border-surface-container-high border-t-primary border-r-chart-2 border-b-muted-foreground border-l-destructive rotate-45" />
+    <Card className="col-span-12 lg:col-span-4 bg-surface-container border-l-[3px] border-chart-2 shadow-sm flex flex-col">
+      <CardHeader className="items-center pb-0">
+        <CardTitle className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest text-center">
+          Asset Allocation
+        </CardTitle>
+        <CardDescription className="text-[10px] font-mono">
+          Current Distribution Architecture
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex-1 pb-0">
+        <ChartContainer
+          config={chartConfig}
+          className="mx-auto aspect-square max-h-[200px]"
+        >
+          <PieChart>
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
+            />
+            <Pie
+              data={chartData}
+              dataKey="value"
+              nameKey="category"
+              innerRadius={40}
+              strokeWidth={5}
+            />
+          </PieChart>
+        </ChartContainer>
+      </CardContent>
+      <CardFooter className="flex-col gap-1 p-6 pt-0 text-sm">
+        <div className="flex items-center gap-2 leading-none font-medium text-foreground">
+          Trending up by 4.2% this month{" "}
+          <TrendingUp className="h-3.5 w-3.5 text-chart-2" />
         </div>
-        <div className="text-center z-10 mt-1">
-          <p className="font-mono text-lg font-bold text-foreground">
-            4 Classes
-          </p>
+        <div className="leading-none text-[10px] text-muted-foreground font-mono uppercase tracking-tight">
+          Aggregated from 4 primary asset nodes
         </div>
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 }

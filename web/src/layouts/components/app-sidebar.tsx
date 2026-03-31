@@ -10,7 +10,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { APP_DATA } from "@/lib/const";
+import { SYSTEM_DATA } from "@/lib/const";
 import NavHeader from "./nav-header";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -20,10 +20,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavHeader />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain groups={APP_DATA.navGroups} />
+        <NavMain groups={SYSTEM_DATA.navGroups} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={APP_DATA.user} />
+        <NavUser user={SYSTEM_DATA.mockUser} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

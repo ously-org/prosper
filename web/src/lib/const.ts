@@ -8,44 +8,18 @@ import {
   GitBranchIcon,
 } from "lucide-react";
 import ReactIcon from "@/assets/react.svg";
-import React from "react";
-
+import { type SystemData } from "./system.model";
+import type { User } from "./model";
 export const SIDEBAR_SUBITEM_LIMIT = 3;
 
-export interface User {
-  name: string;
-  email: string;
-  avatar: string;
-}
+const MockUser: User = {
+  name: "Mock User",
+  email: "mockUser@mock.com",
+  avatar: ReactIcon,
+};
 
-export interface NavSubItem {
-  title: string;
-  url: string;
-}
-
-export interface NavItem {
-  title: string;
-  url: string;
-  icon?: React.ElementType;
-  items?: NavSubItem[];
-}
-
-export interface NavGroup {
-  label?: string;
-  items: NavItem[];
-}
-
-export interface AppData {
-  user: User;
-  navGroups: NavGroup[];
-}
-
-export const APP_DATA: AppData = {
-  user: {
-    name: "Supakone",
-    email: "supakone.kongprapan@gmail.com",
-    avatar: ReactIcon,
-  },
+export const SYSTEM_DATA: SystemData = {
+  mockUser: MockUser,
   navGroups: [
     {
       label: "Current",

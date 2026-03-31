@@ -1,9 +1,10 @@
 import { ArrowUp } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 export function NetWorthPulse() {
   return (
-    <div className="col-span-12 lg:col-span-8 bg-surface-container rounded-md p-6 flex flex-col justify-between border-l-[3px] border-primary shadow-sm">
-      <div className="flex justify-between items-start">
+    <Card className="col-span-12 lg:col-span-8 bg-surface-container flex flex-col justify-between border-l-[3px] border-primary shadow-sm p-6">
+      <CardContent className="p-0 flex justify-between items-start">
         <div>
           <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest block mb-1">
             Total Net Worth
@@ -33,7 +34,7 @@ export function NetWorthPulse() {
           <div className="flex-1 bg-primary/40 h-[85%] rounded-t-sm" />
           <div className="flex-1 bg-primary h-full rounded-t-sm" />
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
