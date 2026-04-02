@@ -57,32 +57,39 @@ const generateMockData = () => {
     loan *= 0.99;
     credit = Math.max(0, credit - 500);
 
-    const totalAssets = cash + stock + property + crypto;
-    const totalLiabilities = mortgage + loan + credit;
-    const netWorth = totalAssets - totalLiabilities;
+    const fCash = Math.floor(cash);
+    const fStock = Math.floor(stock);
+    const fProperty = Math.floor(property);
+    const fCrypto = Math.floor(crypto);
+    const fMortgage = Math.floor(mortgage);
+    const fLoan = Math.floor(loan);
+    const fCredit = Math.floor(credit);
 
-    const tiedLiabilities = mortgage;
-    const untiedLiabilities = loan + credit;
+    const totalAssets = fCash + fStock + fProperty + fCrypto;
+    const tiedLiabilities = fMortgage;
+    const untiedLiabilities = fLoan + fCredit;
+    
     const equity = totalAssets - tiedLiabilities;
     const untiedDebt = -untiedLiabilities;
+    const netWorth = totalAssets - (tiedLiabilities + untiedLiabilities);
 
     data.push({
       date: date.toISOString().split('T')[0],
       // Assets
-      cash: Math.floor(cash),
-      stock: Math.floor(stock),
-      property: Math.floor(property),
-      crypto: Math.floor(crypto),
-      totalAssets: Math.floor(totalAssets),
+      cash: fCash,
+      stock: fStock,
+      property: fProperty,
+      crypto: fCrypto,
+      totalAssets: totalAssets,
       // Liabilities
-      mortgage: Math.floor(mortgage),
-      loan: Math.floor(loan),
-      credit: Math.floor(credit),
-      totalLiabilities: Math.floor(totalLiabilities),
+      mortgage: fMortgage,
+      loan: fLoan,
+      credit: fCredit,
+      totalLiabilities: tiedLiabilities + untiedLiabilities,
       // Summary
-      netWorth: Math.floor(netWorth),
-      equity: Math.floor(equity),
-      untiedDebt: Math.floor(untiedDebt),
+      netWorth: netWorth,
+      equity: equity,
+      untiedDebt: untiedDebt,
     });
   }
   return data;
@@ -135,7 +142,7 @@ export function TrajectoryChart() {
       <CardHeader className="flex items-center gap-2 space-y-0 py-5 sm:flex-row p-0 mb-4 border-none outline-none">
         <div className="grid flex-1 gap-1">
           <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Projection Architecture</CardTitle>
-          <CardDescription className="text-[10px] font-mono">
+          <CardDescription className="text-[10px] font-mono capitalize">
             Trajectory simulation for {viewMode.replace(/([A-Z])/g, ' $1')}
           </CardDescription>
         </div>
