@@ -1,8 +1,9 @@
-import { Frequency } from "@/lib/enum";
+import { Frequency, CommitActionType, EntityType } from "@/lib/enum";
 import type { Asset } from "@/lib/model/Asset";
 import type { Liability } from "@/lib/model/Liability";
 import type { Income } from "@/lib/model/Income";
 import type { Expense } from "@/lib/model/Expense";
+import type { CommitAction, CommitActionUpdate, CommitActionAdd } from "@/lib/model/CommitAction";
 import { ASSET_TYPE_TEXT, LIABILITY_TYPE_TEXT } from "@/components/const";
 
 export interface FinancialItem {
@@ -13,6 +14,7 @@ export interface FinancialItem {
   rate?: number; // Growth, Interest, etc.
   allocation: number;
   color?: string;
+  isStaged?: boolean;
 }
 
 export interface FinancialGroup {
@@ -21,6 +23,69 @@ export interface FinancialGroup {
   totalAllocation: number;
   weightedRate?: number;
   items: FinancialItem[];
+}
+
+export function mergeStagedActions(
+  items: FinancialItem[],
+  stagedActions: CommitAction[],
+  entityType: EntityType,
+  valueKey: string
+): FinancialItem[] {
+  let result = [...items];
+
+  // 1. Handle Deletes
+  const deletedIds = new Set(
+    stagedActions
+      .filter(a => a.type === CommitActionType.Delete && a.entityType === entityType)
+      .map(a => (a as any).entityId)
+  );
+  result = result.filter(item => !deletedIds.has(item.id));
+
+  // 2. Handle Updates
+  stagedActions
+    .filter(a => a.type === CommitActionType.Update && a.entityType === entityType)
+    .forEach(action => {
+      const update = action as CommitActionUpdate;
+      const index = result.findIndex(i => i.id === update.entityId);
+      if (index > -1) {
+        const data = update.data as any;
+        result[index] = {
+          ...result[index],
+          name: data.nameTo ?? result[index].name,
+          primaryValue: data[valueKey] !== undefined 
+            ? result[index].primaryValue + data[valueKey] 
+            : result[index].primaryValue,
+          isStaged: true
+        };
+      }
+    });
+
+  // 3. Handle Adds
+  stagedActions
+    .filter(a => a.type === CommitActionType.Add && a.entityType === entityType)
+    .forEach(action => {
+      const add = action as CommitActionAdd;
+      const data = add.data as any;
+      
+      // Determine value based on entity type
+      let primaryValue = 0;
+      if (entityType === EntityType.Asset) primaryValue = data.value;
+      else if (entityType === EntityType.Liability) primaryValue = data.balance;
+      else primaryValue = data.amount;
+
+      result.push({
+        id: data.id,
+        name: data.name,
+        category: data.categoryName || "Other", // Use category name from data
+        primaryValue: primaryValue,
+        rate: data.growthRate !== undefined ? data.growthRate * 100 : undefined,
+        allocation: 0, // Will be recalculated by grouping
+        color: data.color || "var(--primary)",
+        isStaged: true
+      });
+    });
+
+  return result;
 }
 
 export function mapAssetsToItems(assets: Asset[]): FinancialItem[] {

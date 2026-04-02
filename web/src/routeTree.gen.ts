@@ -15,6 +15,7 @@ import { Route as CurrentRouteImport } from './routes/current'
 import { Route as BranchesRouteImport } from './routes/branches'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BranchesIndexRouteImport } from './routes/branches.index'
 import { Route as BranchesNameRouteImport } from './routes/branches.$name'
 
 const RegisterRoute = RegisterRouteImport.update({
@@ -47,6 +48,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BranchesIndexRoute = BranchesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BranchesRoute,
+} as any)
 const BranchesNameRoute = BranchesNameRouteImport.update({
   id: '/$name',
   path: '/$name',
@@ -61,15 +67,16 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/branches/$name': typeof BranchesNameRoute
+  '/branches/': typeof BranchesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/branches': typeof BranchesRouteWithChildren
   '/current': typeof CurrentRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/branches/$name': typeof BranchesNameRoute
+  '/branches': typeof BranchesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +87,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/branches/$name': typeof BranchesNameRoute
+  '/branches/': typeof BranchesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,15 +99,16 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/branches/$name'
+    | '/branches/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/branches'
     | '/current'
     | '/login'
     | '/register'
     | '/branches/$name'
+    | '/branches'
   id:
     | '__root__'
     | '/'
@@ -109,6 +118,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/branches/$name'
+    | '/branches/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -164,6 +174,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/branches/': {
+      id: '/branches/'
+      path: '/'
+      fullPath: '/branches/'
+      preLoaderRoute: typeof BranchesIndexRouteImport
+      parentRoute: typeof BranchesRoute
+    }
     '/branches/$name': {
       id: '/branches/$name'
       path: '/$name'
@@ -176,10 +193,12 @@ declare module '@tanstack/react-router' {
 
 interface BranchesRouteChildren {
   BranchesNameRoute: typeof BranchesNameRoute
+  BranchesIndexRoute: typeof BranchesIndexRoute
 }
 
 const BranchesRouteChildren: BranchesRouteChildren = {
   BranchesNameRoute: BranchesNameRoute,
+  BranchesIndexRoute: BranchesIndexRoute,
 }
 
 const BranchesRouteWithChildren = BranchesRoute._addFileChildren(

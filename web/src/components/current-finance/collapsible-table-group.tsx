@@ -1,7 +1,6 @@
-import { useState } from "react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
-import { RiArrowRightSLine, RiArrowDownSLine, RiAddLine } from "@remixicon/react";
+import { RiArrowRightSLine, RiArrowDownSLine, RiAddLine, RiDeleteBinLine } from "@remixicon/react";
 import type { FinancialGroup } from "./financial-table-adapters";
 import { EditableCell } from "./editable-cell";
 import { useCommitStore } from "@/store/use-commit-store";
@@ -12,11 +11,12 @@ interface GroupProps {
   group: FinancialGroup;
   entityType: EntityType;
   valueKey: string;
+  isExpanded: boolean;
+  onToggle: () => void;
 }
 
-export function CollapsibleTableGroup({ group, entityType, valueKey }: GroupProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const { stageUpdate, stageAdd } = useCommitStore();
+export function CollapsibleTableGroup({ group, entityType, valueKey, isExpanded, onToggle }: GroupProps) {
+  const { stageUpdate, stageAdd, stageDelete } = useCommitStore();
 
   const handleAdd = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -60,18 +60,18 @@ export function CollapsibleTableGroup({ group, entityType, valueKey }: GroupProp
         break;
     }
     stageAdd(entityType, defaults);
-    setIsOpen(true);
+    if (!isExpanded) onToggle();
   };
 
   return (
     <>
       <TableRow 
         className="hover:bg-surface-container-highest transition-colors cursor-pointer border-b border-border/20 last:border-0 group/row"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={onToggle}
       >
         <TableCell className="px-6 py-4 flex items-center gap-3 border-0 w-[360px] min-w-[360px] max-w-[360px]">
           <div className="flex-shrink-0">
-            {isOpen ? (
+            {isExpanded ? (
               <RiArrowDownSLine className="w-4 h-4 text-muted-foreground" />
             ) : (
               <RiArrowRightSLine className="w-4 h-4 text-muted-foreground" />
@@ -113,15 +113,21 @@ export function CollapsibleTableGroup({ group, entityType, valueKey }: GroupProp
         </TableCell>
       </TableRow>
       
-      {isOpen && group.items.map((item) => (
-        <TableRow key={item.id} className="bg-surface-container/50 border-b border-border/10 last:border-0">
+      {isExpanded && group.items.map((item) => (
+        <TableRow key={item.id} className="bg-surface-container/50 border-b border-border/10 last:border-0 group/item">
           <TableCell className="px-6 py-3 pl-12 flex items-center gap-3 border-0 w-[360px] min-w-[360px] max-w-[360px]">
              <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
-             <EditableCell 
-                value={item.name} 
-                className="text-sm text-muted-foreground truncate"
-                onSave={(v) => stageUpdate(entityType, item.id, { nameTo: v })}
-             />
+             <div className="flex items-center gap-2 flex-1 min-w-0">
+               <EditableCell 
+                  value={item.name} 
+                  className="text-sm text-muted-foreground truncate"
+                  onSave={(v) => stageUpdate(entityType, item.id, { nameTo: v })}
+               />
+               <RiDeleteBinLine 
+                 className="w-3.5 h-3.5 text-muted-foreground/40 hover:text-destructive cursor-pointer opacity-0 group-hover/item:opacity-100 transition-opacity flex-shrink-0"
+                 onClick={() => stageDelete(entityType, item.id)}
+               />
+             </div>
           </TableCell>
           <TableCell className="px-6 py-3 font-mono text-sm text-muted-foreground border-0">
             <EditableCell 

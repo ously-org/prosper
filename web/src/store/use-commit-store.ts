@@ -54,7 +54,11 @@ export const useCommitStore = create<CommitStore>((set, get) => ({
         {
           type: CommitActionType.Add,
           entityType,
-          data: { ...data, id: `new_${Date.now()}` },
+          data: { 
+            ...data, 
+            id: `new_${Date.now()}`,
+            categoryName: data.category // Store the display name for grouping
+          },
         } as CommitAction,
       ],
     }));

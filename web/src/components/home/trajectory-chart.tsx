@@ -41,6 +41,7 @@ interface TrajectoryChartProps {
   goals?: ChartGoalMarker[];
   isMini?: boolean;
   syncId?: string;
+  layout?: "full" | "split";
 }
 
 // Generate mock data for up to 30 years (monthly)
@@ -132,9 +133,11 @@ export function TrajectoryChart({
   goals = [],
   isMini = false,
   syncId,
+  layout = "full",
 }: TrajectoryChartProps) {
   const [timeRange, setTimeRange] = React.useState(isMini ? "30y" : "1y");
   const [viewMode, setViewMode] = React.useState("networth");
+  const [activeData, setActiveData] = React.useState<any | null>(null);
 
   const sourceData = data || chartData;
 
@@ -172,10 +175,26 @@ export function TrajectoryChart({
     });
   }, [timeRange, sourceData]);
 
+  // Update activeData when filteredData changes
+  React.useEffect(() => {
+    if (filteredData.length > 0) {
+      setActiveData(filteredData[filteredData.length - 1]); // default to last item
+    } else {
+      setActiveData(null);
+    }
+  }, [filteredData]);
+
+  const currencyFormatter = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  });
+
   return (
-    <Card
-      className={`border-none bg-transparent shadow-none p-0 ring-0 ring-offset-0 ring-none outline-none ${isMini ? "p-0" : ""}`}
-    >
+    <div className={`flex flex-col md:flex-row gap-6 w-full h-full`}>
+      <Card
+        className={`flex-1 border-none bg-transparent shadow-none p-0 ring-0 ring-offset-0 ring-none outline-none ${isMini ? "p-0" : ""}`}
+      >
       {!isMini && (
         <CardHeader className="flex items-center gap-2 space-y-0 py-5 sm:flex-row p-0 mb-4 border-none outline-none">
           <div className="grid flex-1 gap-1">
@@ -264,7 +283,23 @@ export function TrajectoryChart({
           config={chartConfig}
           className={`aspect-auto w-full border-none outline-none ${isMini ? "h-[160px]" : "h-[320px]"}`}
         >
-          <AreaChart data={filteredData} syncId={syncId}>
+          <AreaChart 
+            data={filteredData} 
+            syncId={syncId}
+            onMouseMove={(state: any) => {
+              if (state && state.activePayload && state.activePayload.length > 0 && layout === "split") {
+                const payloadObj = state.activePayload[0].payload;
+                if (!activeData || activeData.date !== payloadObj.date) {
+                  setActiveData(payloadObj);
+                }
+              }
+            }}
+            onMouseLeave={() => {
+              if (layout === "split" && filteredData.length > 0) {
+                setActiveData(filteredData[filteredData.length - 1]);
+              }
+            }}
+          >
             <defs>
               {Object.keys(chartConfig).map((key) => (
                 <linearGradient
@@ -334,7 +369,7 @@ export function TrajectoryChart({
                           ? "totalAssets"
                           : "totalLiabilities";
                     const totalValue = item.payload[totalKey];
-
+  
                     const isLastItem =
                       viewMode === "assets"
                         ? name === "crypto"
@@ -343,12 +378,12 @@ export function TrajectoryChart({
                           : viewMode === "networth"
                             ? name === "untiedDebt"
                             : true;
-
+  
                     const displayValue =
                       name === "untiedDebt"
                         ? `-$${Math.abs(value as number).toLocaleString()}`
                         : `$${(value as number).toLocaleString()}`;
-
+  
                     return (
                       <div className="flex flex-1 justify-between items-center gap-4">
                         <div className="flex items-center gap-1.5">
@@ -477,5 +512,63 @@ export function TrajectoryChart({
         </ChartContainer>
       </CardContent>
     </Card>
+      
+      {layout === "split" && activeData && (
+        <div className="w-full md:w-[280px] shrink-0 border-l border-border/10 pl-6 flex flex-col gap-6 animate-in fade-in max-h-[360px] overflow-y-auto pr-2">
+          <div className="flex items-center justify-between pb-4 border-b border-border/10">
+            <span className="text-sm font-mono text-muted-foreground">Year {new Date(activeData.date).getFullYear()}</span>
+            <span className="text-sm font-mono font-bold text-foreground">
+              Age {new Date(activeData.date).getFullYear() - 1990 /* Hack for now */}
+            </span>
+          </div>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-mono font-bold text-chart-2">Net Worth</span>
+              <span className="text-sm font-mono font-bold">{currencyFormatter.format(activeData.netWorth || activeData.totalAssets - (activeData.totalLiabilities || 0))}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-mono text-muted-foreground">Liquid Net Worth</span>
+              <span className="text-sm font-mono">{currencyFormatter.format((activeData.cash || 0) + (activeData.stock || 0))}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-mono font-bold text-chart-4">Total Assets</span>
+              <span className="text-sm font-mono font-bold">{currencyFormatter.format(activeData.totalAssets)}</span>
+            </div>
+            <div className="space-y-2 pl-2 border-l-2 border-border/20">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono text-muted-foreground uppercase">Cash & Equiv</span>
+                <span className="text-xs font-mono">{currencyFormatter.format(activeData.cash || 0)}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono text-muted-foreground uppercase">Equities</span>
+                <span className="text-xs font-mono">{currencyFormatter.format(activeData.stock || 0)}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono text-muted-foreground uppercase">Real Estate</span>
+                <span className="text-xs font-mono">{currencyFormatter.format(activeData.property || 0)}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-mono font-bold text-destructive">Total Liabilities</span>
+              <span className="text-sm font-mono font-bold">{currencyFormatter.format(activeData.totalLiabilities || 0)}</span>
+            </div>
+             <div className="space-y-2 pl-2 border-l-2 border-border/20">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono text-muted-foreground uppercase">Mortgage</span>
+                <span className="text-xs font-mono">{currencyFormatter.format(activeData.mortgage || 0)}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono text-muted-foreground uppercase">Untied Debt</span>
+                <span className="text-xs font-mono">{currencyFormatter.format(Math.abs(activeData.untiedDebt || 0))}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

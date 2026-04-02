@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RiAddLine } from "@remixicon/react";
+import { RiAddLine, RiCloseLine } from "@remixicon/react";
 import {
   useAssets,
   useLiabilities,
@@ -23,6 +23,7 @@ import {
   mapIncomeToItems,
   mapExpensesToItems,
   groupItemsByCategory,
+  mergeStagedActions,
 } from "./financial-table-adapters";
 import { CollapsibleTableGroup } from "./collapsible-table-group";
 import { useCommitStore } from "@/store/use-commit-store";
@@ -32,7 +33,20 @@ type TabType = "assets" | "liabilities" | "income" | "expenses";
 
 export function AssetBreakdownTable() {
   const [activeTab, setActiveTab] = useState<TabType>("assets");
-  const { stagedActions, commit } = useCommitStore();
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
+    new Set(),
+  );
+  const { stagedActions, commit, clearStaging } = useCommitStore();
+
+  const toggleCategory = (category: string) => {
+    const newExpanded = new Set(expandedCategories);
+    if (newExpanded.has(category)) {
+      newExpanded.delete(category);
+    } else {
+      newExpanded.add(category);
+    }
+    setExpandedCategories(newExpanded);
+  };
 
   const { data: assets, isLoading: isLoadingAssets } = useAssets();
   const { data: liabilities, isLoading: isLoadingLiab } = useLiabilities();
@@ -89,9 +103,23 @@ export function AssetBreakdownTable() {
     }
   };
 
-  const { items, isLoading, valueLabel, rateLabel, entityType, valueKey } =
-    getTableData();
-  const groupedData = groupItemsByCategory(items);
+  const {
+    items: baseItems,
+    isLoading,
+    valueLabel,
+    rateLabel,
+    entityType,
+    valueKey,
+  } = getTableData();
+
+  // Merge staged actions with base items to show real-time changes
+  const mergedItems = mergeStagedActions(
+    baseItems,
+    stagedActions,
+    entityType,
+    valueKey,
+  );
+  const groupedData = groupItemsByCategory(mergedItems);
 
   return (
     <Card className="col-span-12 xl:col-span-8 bg-surface-container overflow-hidden flex flex-col shadow-sm border border-border/20">
@@ -121,15 +149,26 @@ export function AssetBreakdownTable() {
             </TabsList>
           </Tabs>
         </div>
-        <Button
-          variant={stagedActions.length > 0 ? "default" : "link"}
-          onClick={commit}
-          className="h-8 px-2 py-1 text-xs font-bold"
-        >
-          {stagedActions.length > 0
-            ? `Commit (${stagedActions.length})`
-            : "No Commit"}
-        </Button>
+        <div className="flex items-center gap-2">
+          {stagedActions.length > 0 && (
+            <Button
+              variant="outline"
+              onClick={clearStaging}
+              className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive border-border/40 bg-surface-container-highest"
+            >
+              <RiCloseLine className="w-4 h-4" />
+            </Button>
+          )}
+          <Button
+            variant={stagedActions.length > 0 ? "default" : "link"}
+            onClick={commit}
+            className="h-8 px-3 py-1 text-xs font-bold"
+          >
+            {stagedActions.length > 0
+              ? `Commit (${stagedActions.length})`
+              : "Update Data"}
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="p-0">
         <Table>
@@ -175,6 +214,8 @@ export function AssetBreakdownTable() {
                   group={group}
                   entityType={entityType}
                   valueKey={valueKey}
+                  isExpanded={expandedCategories.has(group.category)}
+                  onToggle={() => toggleCategory(group.category)}
                 />
               ))
             )}
