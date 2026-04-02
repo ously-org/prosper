@@ -1,6 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import type { Asset } from "@/lib/model/Asset";
-import { AssetType, LiabilityType, Frequency, GoalType, GoalMetric } from "@/lib/enum";
+import {
+  AssetType,
+  LiabilityType,
+  Frequency,
+  GoalType,
+  GoalMetric,
+} from "@/lib/enum";
 import type { Liability } from "@/lib/model/Liability";
 import type { Income } from "@/lib/model/Income";
 import type { Expense } from "@/lib/model/Expense";
@@ -152,11 +158,11 @@ const MOCK_BRANCHES: Branch[] = [
       {
         id: "goal_retirement",
         nameTo: "Early Retirement",
-        targetDateTo: new Date("2042-01-01"), // Age 50
+        // targetDateTo: new Date("2042-01-01"), // Age 50
       },
       {
         id: "goal_fi",
-        targetValueBy: 500000, // Increase target to $2.5M
+        // targetValueBy: 500000, // Increase target to $2.5M
       },
     ],
   },
@@ -172,7 +178,7 @@ const MOCK_BRANCHES: Branch[] = [
       {
         id: "goal_house",
         nameTo: "Buy Family Home",
-        targetValueBy: 200000, // Increase downpayment to $700k
+        // targetValueBy: 200000, // Increase downpayment to $700k
       },
     ],
   },

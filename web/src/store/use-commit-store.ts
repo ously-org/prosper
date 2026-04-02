@@ -1,5 +1,8 @@
 import { create } from "zustand";
-import { CommitAction, CommitActionUpdate } from "@/lib/model/CommitAction";
+import type {
+  CommitAction,
+  CommitActionUpdate,
+} from "@/lib/model/CommitAction";
 import { CommitActionType, EntityType } from "@/lib/enum";
 
 interface CommitStore {
@@ -21,7 +24,7 @@ export const useCommitStore = create<CommitStore>((set, get) => ({
         a.type === CommitActionType.Update &&
         "entityId" in a &&
         a.entityId === entityId &&
-        a.entityType === entityType
+        a.entityType === entityType,
     );
 
     if (existingIndex > -1) {
@@ -54,10 +57,10 @@ export const useCommitStore = create<CommitStore>((set, get) => ({
         {
           type: CommitActionType.Add,
           entityType,
-          data: { 
-            ...data, 
+          data: {
+            ...data,
             id: `new_${Date.now()}`,
-            categoryName: data.category // Store the display name for grouping
+            categoryName: data.category, // Store the display name for grouping
           },
         } as CommitAction,
       ],
