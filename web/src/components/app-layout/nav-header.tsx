@@ -3,7 +3,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-} from "../../components/ui/sidebar";
+} from "@/components/ui/sidebar";
 
 function NavHeader() {
   return (
@@ -20,7 +20,7 @@ function NavHeader() {
               alt=""
               className="h-10 w-10 transition-all group-data-[collapsible=icon]:h-6 group-data-[collapsible=icon]:w-6"
             />
-            <span className="text-base text-primary font-semibold group-data-[collapsible=icon]:hidden">
+            <span className="text-base text-white font-semibold group-data-[collapsible=icon]:hidden">
               PROSPER
             </span>
           </a>

@@ -1,51 +1,42 @@
 import {
   LayoutDashboardIcon,
   ReceiptRussianRubleIcon,
-  TargetIcon,
   ArrowLeftRightIcon,
   HistoryIcon,
   Settings2Icon,
   GitBranchIcon,
 } from "lucide-react";
 import ReactIcon from "@/assets/react.svg";
-import React from "react";
+import { type SystemData } from "@/lib/system.model";
+import type { User } from "@/lib/model/User";
+import type { Branch } from "@/lib/model/Branch";
 
 export const SIDEBAR_SUBITEM_LIMIT = 3;
 
-export interface User {
-  name: string;
-  email: string;
-  avatar: string;
-}
+const MockBranch: Branch = {
+  id: "main",
+  name: "main",
+  commits: [],
+  goalChanges: [],
+};
 
-export interface NavSubItem {
-  title: string;
-  url: string;
-}
-
-export interface NavItem {
-  title: string;
-  url: string;
-  icon?: React.ElementType;
-  items?: NavSubItem[];
-}
-
-export interface NavGroup {
-  label?: string;
-  items: NavItem[];
-}
-
-export interface AppData {
-  user: User;
-  navGroups: NavGroup[];
-}
-
-export const APP_DATA: AppData = {
-  user: {
-    name: "Supakone",
-    email: "supakone.kongprapan@gmail.com",
-    avatar: ReactIcon,
+const MockUser: User = {
+  name: "Mock User",
+  email: "mockUser@mock.com",
+  avatar: ReactIcon,
+  pastBranch: MockBranch,
+  initialFinancialState: {
+    assets: [],
+    liabilities: [],
+    income: [],
+    expenses: [],
   },
+  initialGoals: [],
+  birthDate: new Date(),
+};
+
+export const SYSTEM_DATA: SystemData = {
+  mockUser: MockUser,
   navGroups: [
     {
       label: "Current",
@@ -56,7 +47,7 @@ export const APP_DATA: AppData = {
           icon: LayoutDashboardIcon,
         },
         {
-          title: "Current finance",
+          title: "Current",
           url: "/current",
           icon: ReceiptRussianRubleIcon,
         },
@@ -66,14 +57,9 @@ export const APP_DATA: AppData = {
       label: "Future",
       items: [
         {
-          title: "Plans",
-          url: "/plans",
+          title: "Branches",
+          url: "/branches",
           icon: GitBranchIcon,
-        },
-        {
-          title: "Goals",
-          url: "/goals",
-          icon: TargetIcon,
         },
         {
           title: "Compare",
@@ -86,8 +72,8 @@ export const APP_DATA: AppData = {
       label: "Other",
       items: [
         {
-          title: "History",
-          url: "/history",
+          title: "Logs",
+          url: "/logs",
           icon: HistoryIcon,
         },
         {
