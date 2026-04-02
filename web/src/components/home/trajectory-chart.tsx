@@ -214,14 +214,20 @@ export function TrajectoryChart() {
                   indicator="dot"
                   formatter={(value, name, item) => {
                     // Custom formatter to show total when hovering breakdown
-                    const totalKey = viewMode === "assets" ? "totalAssets" : "totalLiabilities";
+                    const totalKey = viewMode === "networth" ? "netWorth" : viewMode === "assets" ? "totalAssets" : "totalLiabilities";
                     const totalValue = item.payload[totalKey];
                     
                     const isLastItem = viewMode === "assets" 
                       ? name === "crypto" 
                       : viewMode === "liabilities" 
                         ? name === "credit" 
-                        : true;
+                        : viewMode === "networth"
+                          ? name === "untiedDebt"
+                          : true;
+
+                    const displayValue = name === "untiedDebt"
+                      ? `-$${Math.abs(value as number).toLocaleString()}`
+                      : `$${(value as number).toLocaleString()}`;
 
                     return (
                       <div className="flex flex-1 justify-between items-center gap-4">
@@ -236,9 +242,9 @@ export function TrajectoryChart() {
                         </div>
                         <div className="flex flex-col items-end">
                           <span className="font-mono font-medium text-foreground tabular-nums">
-                            ${(value as number).toLocaleString()}
+                            {displayValue}
                           </span>
-                          {isLastItem && viewMode !== "networth" && (
+                          {isLastItem && (
                             <span className="text-[11px] font-mono font-bold text-primary mt-2 border-t border-primary/20 pt-2">
                               TOTAL: ${totalValue.toLocaleString()}
                             </span>
@@ -251,13 +257,22 @@ export function TrajectoryChart() {
               }
             />
             {viewMode === "networth" && (
-              <Area
-                dataKey="netWorth"
-                type="natural"
-                fill="url(#fillnetWorth)"
-                stroke="var(--color-netWorth)"
-                stackId="a"
-              />
+              <>
+                <Area
+                  dataKey="equity"
+                  type="natural"
+                  fill="url(#fillequity)"
+                  stroke="var(--color-equity)"
+                  stackId="networth"
+                />
+                <Area
+                  dataKey="untiedDebt"
+                  type="natural"
+                  fill="url(#filluntiedDebt)"
+                  stroke="var(--color-untiedDebt)"
+                  stackId="networth"
+                />
+              </>
             )}
             {viewMode === "assets" && (
               <>
