@@ -2,12 +2,42 @@ import { createFileRoute } from "@tanstack/react-router";
 import { FinancePageLayout } from "@/components/page-layout/page-layout";
 import { MetricCards } from "@/components/home/metric-cards";
 import { PlanDashboard } from "@/components/home/plan-dashboard";
+import { useGoals, useUser } from "@/hooks/use-assets";
+import { GoalType } from "@/lib/enum";
+import { type TimeFixedGoal } from "@/lib/model/Goal.TimeFixed";
+import { chartData, type ChartGoalMarker } from "@/components/home/trajectory-chart";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
 function Index() {
+  const { data: goals = [] } = useGoals();
+  const { data: user } = useUser();
+
+  const chartGoals: ChartGoalMarker[] = goals.map((g) => {
+    let year = 2030; // Default fallback
+
+    if (g.type === GoalType.TimeFixed) {
+      year = (g as TimeFixedGoal).targetDate.getFullYear();
+    } else if (g.name === "Early Retirement" && user?.birthDate) {
+      // Logic for Early Retirement: birth year + 45
+      year = new Date(user.birthDate).getFullYear() + 45;
+    } else if (g.name === "Buy Vacation Home") {
+      year = 2032;
+    }
+
+    // Find the net worth at that year in chartData
+    const dataPoint = chartData.find((d) => d.date.startsWith(year.toString())) || chartData[chartData.length - 1];
+
+    return {
+      date: `${year}-01-01`,
+      netWorth: dataPoint.netWorth,
+      label: g.name,
+      isAchieved: g.isCompleted,
+    };
+  });
+
   return (
     <FinancePageLayout
       title="Architecture Center"
@@ -16,7 +46,7 @@ function Index() {
       <MetricCards />
 
       <section className="grid grid-cols-12 gap-6 pb-8">
-        <PlanDashboard />
+        <PlanDashboard goals={chartGoals} />
       </section>
     </FinancePageLayout>
   );

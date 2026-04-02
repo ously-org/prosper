@@ -24,8 +24,8 @@ function CurrentFinance() {
       <div className="grid grid-cols-12 gap-6 pb-8">
         <AssetBreakdownTable />
         <div className="col-span-12 xl:col-span-4 flex flex-col gap-6">
-          <RecentActivityLog />
           <LiquidCashRatio />
+          <RecentActivityLog />
         </div>
       </div>
     </FinancePageLayout>

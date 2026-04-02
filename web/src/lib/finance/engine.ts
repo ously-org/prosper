@@ -49,9 +49,11 @@ export class ProjectionEngine {
       if (year < cf.startYear || (cf.endYear && year > cf.endYear)) continue;
 
       const yearsElapsed = year - cf.startYear;
+      const growthRate = cf.growthRate ?? 0;
+      
       const adjustedAmount = cf.inflationAdjusted
         ? cf.amount * Math.pow(1 + this.config.inflationRate, yearsElapsed)
-        : cf.amount;
+        : cf.amount * Math.pow(1 + growthRate, yearsElapsed);
 
       if (cf.type === "Income") income += adjustedAmount;
       else expenses += adjustedAmount;
@@ -66,20 +68,27 @@ export class ProjectionEngine {
 
     // 4. Capture Snapshot
     const balances: Record<string, number> = {};
-    let netWorth = 0;
+    let totalNetWorth = 0;
     for (const acc of this.accounts.values()) {
       balances[acc.id] = acc.balance;
-      netWorth += acc.balance;
+      totalNetWorth += acc.balance;
     }
+
+    const yearsElapsed = year - this.config.startYear;
+    const deflationFactor = this.config.isRealDollars
+      ? Math.pow(1 + this.config.inflationRate, yearsElapsed)
+      : 1;
 
     return {
       year,
       age,
-      totalIncome: income,
-      totalExpenses: expenses,
+      totalIncome: income / deflationFactor,
+      totalExpenses: expenses / deflationFactor,
       taxesPaid: 0, // Placeholder for Phase 3
-      netWorth: netWorth,
-      accounts: balances,
+      netWorth: totalNetWorth / deflationFactor,
+      accounts: Object.fromEntries(
+        Object.entries(balances).map(([id, bal]) => [id, bal / deflationFactor])
+      ),
     };
   }
 

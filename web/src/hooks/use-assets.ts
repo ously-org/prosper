@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import type { Asset } from "@/lib/model/Asset";
-import { AssetType, LiabilityType, Frequency, GoalType } from "@/lib/enum";
+import { AssetType, LiabilityType, Frequency, GoalType, GoalMetric } from "@/lib/enum";
 import type { Liability } from "@/lib/model/Liability";
 import type { Income } from "@/lib/model/Income";
 import type { Expense } from "@/lib/model/Expense";
@@ -9,6 +9,10 @@ import type { Branch } from "@/lib/model/Branch";
 import type { Commit } from "@/lib/model/Commit";
 import type { Goal } from "@/lib/model/Goal.Base";
 import type { FinancialState } from "@/lib/model/FinancialState";
+
+import type { MeasurableGoal } from "@/lib/model/Goal.Measurable";
+import type { TimeFixedGoal } from "@/lib/model/Goal.TimeFixed";
+import type { CommitmentGoal } from "@/lib/model/Goal.Commitment";
 
 // --- MOCK DATA ---
 
@@ -53,7 +57,7 @@ const MOCK_LIABILITIES: Liability[] = [
     name: "Mortgage",
     balance: 320000,
     type: LiabilityType.Mortgage,
-    interestRate: 0.035,
+    growthRate: 0.035,
   },
 ];
 
@@ -74,6 +78,7 @@ const MOCK_EXPENSES: Expense[] = [
     amount: 4500,
     frequency: Frequency.Monthly,
     inflationAdjusted: true,
+    growthRate: 0.02,
   },
 ];
 
@@ -87,19 +92,38 @@ const MOCK_USER: Partial<User> = {
 
 const MOCK_GOALS: Goal[] = [
   {
-    id: "goal_1",
-    name: "Early Retirement",
-    description: "Reach financial independence by age 45.",
+    id: "goal_retirement",
+    name: "Standard Retirement",
+    description: "Retire at age 65.",
+    isCompleted: false,
+    type: GoalType.TimeFixed,
+    targetDate: new Date("2057-01-01"),
+  } as TimeFixedGoal,
+  {
+    id: "goal_house",
+    name: "Buy Dream Home",
+    description: "Down payment for a house in Seattle.",
     isCompleted: false,
     type: GoalType.Measurable,
-  },
+    targetMetric: GoalMetric.NetWorth,
+    targetValue: 500000,
+  } as MeasurableGoal,
   {
-    id: "goal_2",
-    name: "Buy Vacation Home",
-    description: "Purchase a property in Lake Tahoe.",
+    id: "goal_family",
+    name: "Start a Family",
+    description: "Be financially ready for kids.",
     isCompleted: false,
     type: GoalType.Commitment,
-  },
+  } as CommitmentGoal,
+  {
+    id: "goal_fi",
+    name: "Financial Independence",
+    description: "Reach $2M in liquid assets.",
+    isCompleted: false,
+    type: GoalType.Measurable,
+    targetMetric: GoalMetric.NetWorth,
+    targetValue: 2000000,
+  } as MeasurableGoal,
 ];
 
 const MOCK_COMMITS: Commit[] = [
@@ -122,9 +146,35 @@ const MOCK_BRANCHES: Branch[] = [
   },
   {
     id: "branch_early_fire",
-    name: "early-fire-scenario",
+    name: "early-fire",
     commits: MOCK_COMMITS,
-    goalChanges: [],
+    goalChanges: [
+      {
+        id: "goal_retirement",
+        nameTo: "Early Retirement",
+        targetDateTo: new Date("2042-01-01"), // Age 50
+      },
+      {
+        id: "goal_fi",
+        targetValueBy: 500000, // Increase target to $2.5M
+      },
+    ],
+  },
+  {
+    id: "branch_family_first",
+    name: "family-first",
+    commits: MOCK_COMMITS,
+    goalChanges: [
+      {
+        id: "goal_family",
+        isCompletedTo: true,
+      },
+      {
+        id: "goal_house",
+        nameTo: "Buy Family Home",
+        targetValueBy: 200000, // Increase downpayment to $700k
+      },
+    ],
   },
 ];
 

@@ -6,6 +6,7 @@ export interface Expense {
   amount: number;
   frequency: Frequency;
   inflationAdjusted: boolean;
+  growthRate: number; // yearly growth rate decimal
 }
 
 export function getYearlyExpenseAmount(expense: Expense): number {
@@ -19,6 +20,7 @@ export function applyExpenseChange(expense: Expense, change: ExpenseChange): Exp
     ...(change.amountBy !== undefined && { amount: expense.amount + change.amountBy }),
     ...(change.frequencyTo !== undefined && { frequency: change.frequencyTo }),
     ...(change.inflationAdjustedTo !== undefined && { inflationAdjusted: change.inflationAdjustedTo }),
+    ...(change.growthRateBy !== undefined && { growthRate: expense.growthRate + change.growthRateBy }),
   };
 }
 
@@ -27,4 +29,5 @@ export interface ExpenseChange {
   amountBy?: number;
   frequencyTo?: Frequency;
   inflationAdjustedTo?: boolean;
+  growthRateBy?: number;
 }

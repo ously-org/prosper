@@ -16,6 +16,7 @@ export interface CashFlow {
   startYear: number;
   endYear?: number; // Optional, defaults to simulation end
   inflationAdjusted: boolean;
+  growthRate?: number; // Annual growth rate decimal
   type: "Income" | "Expense";
 }
 

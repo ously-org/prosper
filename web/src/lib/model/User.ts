@@ -21,8 +21,8 @@ export interface User {
  * Returns the user's goals for a specific branch by applying
  * branch-level changes to the initial goals.
  */
-export function getUserGoals(user: User, branch: Branch): Goal[] {
-  return user.initialGoals.map((goal) => {
+export function getUserGoals(user: User, branch: Branch, initialGoals: Goal[] = user.initialGoals): Goal[] {
+  return initialGoals.map((goal) => {
     const change = branch.goalChanges.find((c) => c.id === goal.id);
     if (!change) return goal;
 
