@@ -47,7 +47,7 @@ export const SYSTEM_DATA: SystemData = {
           icon: LayoutDashboardIcon,
         },
         {
-          title: "Current finance",
+          title: "Current",
           url: "/current",
           icon: ReceiptRussianRubleIcon,
         },
@@ -57,8 +57,8 @@ export const SYSTEM_DATA: SystemData = {
       label: "Future",
       items: [
         {
-          title: "Plans",
-          url: "/plans",
+          title: "Branchs",
+          url: "/branchs",
           icon: GitBranchIcon,
         },
         {
@@ -72,8 +72,8 @@ export const SYSTEM_DATA: SystemData = {
       label: "Other",
       items: [
         {
-          title: "History",
-          url: "/history",
+          title: "Logs",
+          url: "/logs",
           icon: HistoryIcon,
         },
         {

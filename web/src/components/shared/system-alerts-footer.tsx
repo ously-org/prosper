@@ -15,7 +15,7 @@ const MOCK_SYSTEM_STATUS: SystemStatus = {
 
 export function SystemAlertsFooter() {
   return (
-    <div className="mt-8">
+    <div>
       <Separator className="bg-border/20 mb-6" />
       <footer className="flex flex-wrap gap-8 items-center text-[11px] font-mono text-muted-foreground">
         <div className="flex items-center gap-2">

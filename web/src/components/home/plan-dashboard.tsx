@@ -17,16 +17,16 @@ export function PlanDashboard() {
   const [selectedBranchId, setSelectedBranchId] = useState("main");
 
   return (
-    <Card className="col-span-12 bg-surface-container shadow-sm p-6">
-      <CardHeader className="p-0 mb-6 flex flex-row items-center justify-between">
+    <Card className="col-span-12 bg-transparent shadow-none border-none ring-0 p-0 outline-none">
+      <CardHeader className="p-0 mb-6 flex flex-row items-center justify-between border-none outline-none">
         <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
           Plan Summary Dashboard
         </CardTitle>
         <Select value={selectedBranchId} onValueChange={setSelectedBranchId}>
-          <SelectTrigger className="w-[180px] h-8 text-[10px] font-mono uppercase bg-surface-container-low border-none shadow-none focus:ring-0">
+          <SelectTrigger className="w-[180px] h-8 text-[10px] font-mono uppercase bg-surface-container-low border-none shadow-none focus:ring-0 outline-none">
             <SelectValue placeholder="Select Plan" />
           </SelectTrigger>
-          <SelectContent className="bg-surface-container border-none shadow-xl">
+          <SelectContent className="bg-surface-container border-none shadow-xl outline-none">
             {branches.map(b => (
               <SelectItem key={b.id} value={b.id} className="text-[10px] font-mono uppercase focus:bg-primary focus:text-primary-foreground">
                 {b.name}
@@ -35,13 +35,13 @@ export function PlanDashboard() {
           </SelectContent>
         </Select>
       </CardHeader>
-      <CardContent className="p-0 grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-surface-container-low rounded-lg p-6 min-h-[400px] flex flex-col">
+      <CardContent className="p-0 grid grid-cols-1 lg:grid-cols-3 gap-6 border-none outline-none">
+        <div className="lg:col-span-2 bg-surface-container-low rounded-lg p-6 min-h-[400px] flex flex-col border-none ring-0 outline-none">
           <div className="flex-1">
             <TrajectoryChart />
           </div>
         </div>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 border-none ring-0 outline-none">
           <UpcomingCommitCard />
         </div>
       </CardContent>

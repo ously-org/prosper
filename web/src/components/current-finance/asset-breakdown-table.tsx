@@ -36,7 +36,7 @@ export function AssetBreakdownTable() {
   return (
     <Card className="col-span-12 xl:col-span-8 bg-surface-container overflow-hidden flex flex-col shadow-sm border border-border/20">
       <CardHeader className="px-6 py-4 bg-surface-container-high flex flex-row justify-between items-center border-b border-border/20 space-y-0">
-        <CardTitle className="text-sm font-bold uppercase tracking-widest text-foreground">
+        <CardTitle className="text-sm font-bold uppercase tracking-widest text-foreground font-mono">
           Asset Breakdown
         </CardTitle>
         <Button

@@ -10,6 +10,10 @@ import {
   PieChart,
   Cell,
   Label,
+  Bar,
+  BarChart,
+  LabelList,
+  ResponsiveContainer,
 } from "recharts";
 
 import {
@@ -26,7 +30,7 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 
-import { useAssets, useLiabilities } from "@/hooks/use-assets";
+import { useAssets, useLiabilities, useIncome, useExpenses } from "@/hooks/use-assets";
 import { ASSET_TYPE_TEXT, LIABILITY_TYPE_TEXT } from "@/components/const";
 
 // Generate mock historical data (monthly)
@@ -75,10 +79,59 @@ const performanceChartConfig = {
 
 export function CurrentFinanceOverview() {
   const [activeTab, setActiveTab] = React.useState<
-    "performance" | "allocation"
+    "performance" | "allocation" | "cashflow"
   >("performance");
   const { data: assets } = useAssets();
   const { data: liabilities } = useLiabilities();
+  const { data: income } = useIncome();
+  const { data: expenses } = useExpenses();
+
+  const waterfallData = React.useMemo(() => {
+    let currentSum = 0;
+    const data = [];
+
+    // Add Incomes
+    if (income) {
+      income.forEach((i) => {
+        data.push({
+          name: i.name,
+          transparent: currentSum,
+          value: i.amount,
+          fill: "var(--chart-2)",
+          isExpense: false,
+          actualValue: i.amount,
+        });
+        currentSum += i.amount;
+      });
+    }
+
+    // Add Expenses
+    if (expenses) {
+      expenses.forEach((e) => {
+        data.push({
+          name: e.name,
+          transparent: currentSum - e.amount,
+          value: e.amount,
+          fill: "var(--destructive)",
+          isExpense: true,
+          actualValue: -e.amount,
+        });
+        currentSum -= e.amount;
+      });
+    }
+
+    // Add Net
+    data.push({
+      name: "Net Cashflow",
+      transparent: 0,
+      value: Math.abs(currentSum),
+      fill: currentSum >= 0 ? "var(--chart-1)" : "var(--destructive)",
+      isExpense: currentSum < 0,
+      actualValue: currentSum,
+    });
+
+    return data;
+  }, [income, expenses]);
 
   const assetChartData = React.useMemo(() => {
     if (!assets) return [];
@@ -156,7 +209,9 @@ export function CurrentFinanceOverview() {
           <CardDescription className="text-[10px] font-mono">
             {activeTab === "performance"
               ? "Historical analysis of the last 12 months"
-              : "Current distribution architecture"}
+              : activeTab === "allocation"
+              ? "Current capital distribution architecture"
+              : "Income and Expense cashflow distribution map"}
           </CardDescription>
         </div>
         <div className="flex">
@@ -182,6 +237,18 @@ export function CurrentFinanceOverview() {
             </span>
             <span className="text-xl leading-none font-bold sm:text-2xl font-mono tracking-tighter">
               Allocation
+            </span>
+          </button>
+          <button
+            data-active={activeTab === "cashflow"}
+            className="flex flex-1 flex-col justify-center gap-1 border-t border-surface-container-high px-6 py-4 text-left border-l data-[active=true]:bg-surface-container-high sm:border-t-0 sm:border-l sm:px-8 sm:py-6 transition-colors outline-none min-w-[200px]"
+            onClick={() => setActiveTab("cashflow")}
+          >
+            <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-tight">
+              Income & Expense
+            </span>
+            <span className="text-xl leading-none font-bold sm:text-2xl font-mono tracking-tighter">
+              Cashflow
             </span>
           </button>
         </div>
@@ -260,7 +327,7 @@ export function CurrentFinanceOverview() {
               />
             </LineChart>
           </ChartContainer>
-        ) : (
+        ) : activeTab === "allocation" ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 py-12">
             {/* Net Worth Donut */}
             <div className="flex flex-col items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -471,6 +538,47 @@ export function CurrentFinanceOverview() {
                 </ChartContainer>
               </div>
             </div>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500 py-6 w-full">
+            <ChartContainer
+              config={{}}
+              className="w-full h-[400px]"
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={waterfallData}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--surface-container-high)" />
+                  <XAxis dataKey="name" tick={{ fontSize: 10, fontFamily: "monospace", fill: "var(--muted-foreground)" }} tickLine={false} axisLine={false} />
+                  <ChartTooltip
+                    cursor={{ fill: "var(--surface-container-high)", opacity: 0.4 }}
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length > 1) {
+                        const data = payload[1].payload; // index 1 is the visible bar
+                        return (
+                          <div className="bg-surface-container-highest border-none shadow-2xl p-3 rounded-lg font-mono text-xs z-50">
+                            <div className="font-bold text-foreground mb-1">{data.name}</div>
+                            <div style={{ color: data.fill }} className="text-lg">
+                              {data.isExpense && data.name !== "Net Cashflow" ? "-" : ""}${data.value.toLocaleString()}
+                            </div>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Bar dataKey="transparent" stackId="a" fill="transparent" />
+                  <Bar dataKey="value" stackId="a" radius={[4, 4, 4, 4]}>
+                    {waterfallData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.fill} />
+                    ))}
+                    <LabelList dataKey="actualValue" position="top" formatter={(val: any) => `${val > 0 ? "+" : ""}${(Number(val)/1000).toFixed(1)}k`} style={{ fill: "var(--muted-foreground)", fontSize: 10, fontFamily: "monospace", fontWeight: "bold" }} />
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
           </div>
         )}
       </CardContent>
