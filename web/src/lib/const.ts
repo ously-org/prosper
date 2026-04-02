@@ -57,8 +57,8 @@ export const SYSTEM_DATA: SystemData = {
       label: "Future",
       items: [
         {
-          title: "Branchs",
-          url: "/branchs",
+          title: "Branches",
+          url: "/branches",
           icon: GitBranchIcon,
         },
         {
