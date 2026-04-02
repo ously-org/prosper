@@ -3,7 +3,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-} from "../../components/ui/sidebar";
+} from "@/components/ui/sidebar";
 
 function NavHeader() {
   return (

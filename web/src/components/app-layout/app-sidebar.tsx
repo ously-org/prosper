@@ -1,8 +1,6 @@
-"use client";
-
 import * as React from "react";
-import { NavMain } from "@/layouts/components/nav-main";
-import { NavUser } from "@/layouts/components/nav-user";
+import { NavMain } from "@/components/app-layout/nav-main";
+import { NavUser } from "@/components/app-layout/nav-user";
 import {
   Sidebar,
   SidebarContent,

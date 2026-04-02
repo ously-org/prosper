@@ -1,4 +1,5 @@
-import type { User } from "./model";
+import type { User } from "@/lib/model/User";
+import type { LucideIcon } from "lucide-react";
 
 export interface NavSubItem {
   title: string;
@@ -8,12 +9,13 @@ export interface NavSubItem {
 export interface NavItem {
   title: string;
   url: string;
-  icon?: React.ElementType;
+  icon?: LucideIcon;
+  isActive?: boolean;
   items?: NavSubItem[];
 }
 
 export interface NavGroup {
-  label?: string;
+  label: string;
   items: NavItem[];
 }
 

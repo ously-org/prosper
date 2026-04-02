@@ -1,5 +1,3 @@
-"use client";
-
 import { TrendingUp } from "lucide-react";
 import { Pie, PieChart } from "recharts";
 
@@ -18,37 +16,27 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 
-import { MOCK_ASSETS } from "./asset-breakdown-table";
-
-const chartData = MOCK_ASSETS.map((asset) => ({
-  category: asset.id,
-  value: asset.value,
-  fill: asset.color,
-}));
+import { useAssets } from "@/hooks/use-assets";
+import type { Asset } from "@/lib/model/Asset";
+import { ASSET_TYPE_TEXT } from "@/components/const";
 
 const chartConfig = {
   value: {
     label: "Market Value ($)",
   },
-  equities: {
-    label: "Equities",
-    color: "var(--chart-1)",
-  },
-  realestate: {
-    label: "Real Estate",
-    color: "var(--chart-2)",
-  },
-  crypto: {
-    label: "Crypto Assets",
-    color: "var(--chart-3)",
-  },
-  cash: {
-    label: "Cash & Eq.",
-    color: "var(--chart-4)",
-  },
+  ...Object.fromEntries(
+    Object.entries(ASSET_TYPE_TEXT).map(([key, value]) => [
+      key,
+      { label: value },
+    ]),
+  ),
 } satisfies ChartConfig;
 
 export function AssetAllocation() {
+  const { data: assets, isLoading } = useAssets();
+
+  const chartData = mapAssetsToChartData(assets ?? []);
+
   return (
     <Card className="col-span-12 lg:col-span-4 bg-surface-container border-l-[3px] border-chart-2 shadow-sm flex flex-col">
       <CardHeader className="items-center pb-0">
@@ -64,19 +52,25 @@ export function AssetAllocation() {
           config={chartConfig}
           className="mx-auto aspect-square max-h-[200px]"
         >
-          <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Pie
-              data={chartData}
-              dataKey="value"
-              nameKey="category"
-              innerRadius={40}
-              strokeWidth={5}
-            />
-          </PieChart>
+          {isLoading ? (
+            <div className="flex items-center justify-center h-full text-[10px] font-mono text-muted-foreground animate-pulse">
+              ANALYZING NODES...
+            </div>
+          ) : (
+            <PieChart>
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent hideLabel />}
+              />
+              <Pie
+                data={chartData}
+                dataKey="value"
+                nameKey="label"
+                innerRadius={40}
+                strokeWidth={5}
+              />
+            </PieChart>
+          )}
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col gap-1 p-6 pt-0 text-sm">
@@ -89,5 +83,28 @@ export function AssetAllocation() {
         </div>
       </CardFooter>
     </Card>
+  );
+}
+
+/**
+ * Mapping helper function to transform domain Asset models into chart-ready data
+ */
+function mapAssetsToChartData(domainAssets: Asset[]) {
+  return domainAssets.reduce(
+    (acc, asset) => {
+      let category = acc.find((c) => c.category === asset.type);
+      if (!category) {
+        category = {
+          category: asset.type,
+          label: ASSET_TYPE_TEXT[asset.type],
+          value: 0,
+          fill: asset.color || "var(--primary)",
+        };
+        acc.push(category);
+      }
+      category.value += asset.value;
+      return acc;
+    },
+    [] as { category: string; label: string; value: number; fill: string }[],
   );
 }
