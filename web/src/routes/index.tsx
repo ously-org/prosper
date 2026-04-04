@@ -1,18 +1,62 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { usePageHeader } from "@/hooks/use-page-header";
+import { MetricCards } from "@/components/finance/SummaryMetric";
+import { PlanDashboard } from "@/components/roadmap/PlanDashboard";
+import { useGoals, useUser } from "@/hooks/use-assets";
+import { GoalType } from "@/lib/enum";
+import { type TimeFixedGoal } from "@/lib/model/Goal.TimeFixed";
+import {
+  chartData,
+  type ChartGoalMarker,
+} from "@/components/shared/TrajectoryChart/TrajectoryChart";
+import { DashboardSection } from "@/components/shared/layout/DashboardSection";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
 function Index() {
+  const { data: goals = [] } = useGoals();
+  const { data: user } = useUser();
+
+  usePageHeader({
+    title: "Architecture Center",
+    description: "Holistic financial trajectory and strategic plan summary.",
+  });
+
+  const chartGoals: ChartGoalMarker[] = goals.map((g) => {
+    let year = 2030; // Default fallback
+
+    if (g.type === GoalType.TimeFixed) {
+      year = (g as TimeFixedGoal).targetDate.getFullYear();
+    } else if (g.name === "Early Retirement" && user?.birthDate) {
+      // Logic for Early Retirement: birth year + 45
+      year = new Date(user.birthDate).getFullYear() + 45;
+    } else if (g.name === "Buy Vacation Home") {
+      year = 2032;
+    }
+
+    // Find the net worth at that year in chartData
+    const dataPoint =
+      chartData.find((d) => d.date.startsWith(year.toString())) ||
+      chartData[chartData.length - 1];
+
+    return {
+      date: `${year}-01-01`,
+      netWorth: dataPoint.netWorth,
+      label: g.name,
+      isAchieved: g.isCompleted,
+    };
+  });
+
   return (
     <>
-      <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-        <div className="aspect-video rounded-md bg-surface-container" />
-        <div className="aspect-video rounded-md bg-surface-container" />
-        <div className="aspect-video rounded-md bg-surface-container" />
-      </div>
-      <div className="min-h-[100vh] flex-1 rounded-md bg-surface-container md:min-h-min" />
+      <DashboardSection>
+        <MetricCards />
+      </DashboardSection>
+      <DashboardSection>
+        <PlanDashboard goals={chartGoals} />
+      </DashboardSection>
     </>
   );
 }

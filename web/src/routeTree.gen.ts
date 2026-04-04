@@ -9,10 +9,35 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as CurrentRouteImport } from './routes/current'
+import { Route as BranchesRouteImport } from './routes/branches'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PlansPlanIdRouteImport } from './routes/plans.$planId'
+import { Route as BranchesIndexRouteImport } from './routes/branches.index'
+import { Route as BranchesNameRouteImport } from './routes/branches.$name'
 
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CurrentRoute = CurrentRouteImport.update({
+  id: '/current',
+  path: '/current',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BranchesRoute = BranchesRouteImport.update({
+  id: '/branches',
+  path: '/branches',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -23,44 +48,118 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PlansPlanIdRoute = PlansPlanIdRouteImport.update({
-  id: '/plans/$planId',
-  path: '/plans/$planId',
-  getParentRoute: () => rootRouteImport,
+const BranchesIndexRoute = BranchesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BranchesRoute,
+} as any)
+const BranchesNameRoute = BranchesNameRouteImport.update({
+  id: '/$name',
+  path: '/$name',
+  getParentRoute: () => BranchesRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/plans/$planId': typeof PlansPlanIdRoute
+  '/branches': typeof BranchesRouteWithChildren
+  '/current': typeof CurrentRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/branches/$name': typeof BranchesNameRoute
+  '/branches/': typeof BranchesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/plans/$planId': typeof PlansPlanIdRoute
+  '/current': typeof CurrentRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/branches/$name': typeof BranchesNameRoute
+  '/branches': typeof BranchesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/plans/$planId': typeof PlansPlanIdRoute
+  '/branches': typeof BranchesRouteWithChildren
+  '/current': typeof CurrentRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/branches/$name': typeof BranchesNameRoute
+  '/branches/': typeof BranchesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/plans/$planId'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/branches'
+    | '/current'
+    | '/login'
+    | '/register'
+    | '/branches/$name'
+    | '/branches/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/plans/$planId'
-  id: '__root__' | '/' | '/about' | '/plans/$planId'
+  to:
+    | '/'
+    | '/about'
+    | '/current'
+    | '/login'
+    | '/register'
+    | '/branches/$name'
+    | '/branches'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/branches'
+    | '/current'
+    | '/login'
+    | '/register'
+    | '/branches/$name'
+    | '/branches/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  PlansPlanIdRoute: typeof PlansPlanIdRoute
+  BranchesRoute: typeof BranchesRouteWithChildren
+  CurrentRoute: typeof CurrentRoute
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/current': {
+      id: '/current'
+      path: '/current'
+      fullPath: '/current'
+      preLoaderRoute: typeof CurrentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/branches': {
+      id: '/branches'
+      path: '/branches'
+      fullPath: '/branches'
+      preLoaderRoute: typeof BranchesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -75,20 +174,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/plans/$planId': {
-      id: '/plans/$planId'
-      path: '/plans/$planId'
-      fullPath: '/plans/$planId'
-      preLoaderRoute: typeof PlansPlanIdRouteImport
-      parentRoute: typeof rootRouteImport
+    '/branches/': {
+      id: '/branches/'
+      path: '/'
+      fullPath: '/branches/'
+      preLoaderRoute: typeof BranchesIndexRouteImport
+      parentRoute: typeof BranchesRoute
+    }
+    '/branches/$name': {
+      id: '/branches/$name'
+      path: '/$name'
+      fullPath: '/branches/$name'
+      preLoaderRoute: typeof BranchesNameRouteImport
+      parentRoute: typeof BranchesRoute
     }
   }
 }
 
+interface BranchesRouteChildren {
+  BranchesNameRoute: typeof BranchesNameRoute
+  BranchesIndexRoute: typeof BranchesIndexRoute
+}
+
+const BranchesRouteChildren: BranchesRouteChildren = {
+  BranchesNameRoute: BranchesNameRoute,
+  BranchesIndexRoute: BranchesIndexRoute,
+}
+
+const BranchesRouteWithChildren = BranchesRoute._addFileChildren(
+  BranchesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  PlansPlanIdRoute: PlansPlanIdRoute,
+  BranchesRoute: BranchesRouteWithChildren,
+  CurrentRoute: CurrentRoute,
+  LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

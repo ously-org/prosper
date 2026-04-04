@@ -31,3 +31,5 @@ dist-ssr
 !.env.example
 
 coverage
+
+.gemini

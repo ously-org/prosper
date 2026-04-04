@@ -1,51 +1,55 @@
 import {
   LayoutDashboardIcon,
   ReceiptRussianRubleIcon,
-  TargetIcon,
   ArrowLeftRightIcon,
   HistoryIcon,
   Settings2Icon,
   GitBranchIcon,
 } from "lucide-react";
-import ReactIcon from "@/assets/react.svg";
-import React from "react";
+import { type SystemData } from "@/lib/system.model";
+import { MOCK_USER } from "@/lib/model/mock";
 
 export const SIDEBAR_SUBITEM_LIMIT = 3;
 
-export interface User {
-  name: string;
-  email: string;
-  avatar: string;
-}
+export const TRAJECTORY_VIEW_MODES = [
+  { value: "networth", label: "Net Worth" },
+  { value: "assets", label: "Assets" },
+  { value: "liabilities", label: "Liabilities" },
+];
 
-export interface NavSubItem {
-  title: string;
-  url: string;
-}
+export const TRAJECTORY_TIME_RANGES = [
+  { value: "12", label: "Next Year" },
+  { value: "24", label: "Next 2 Years" },
+  { value: "60", label: "Next 5 Years" },
+  { value: "120", label: "Next 10 Years" },
+  { value: "360", label: "Retirement (30y)" },
+];
 
-export interface NavItem {
-  title: string;
-  url: string;
-  icon?: React.ElementType;
-  items?: NavSubItem[];
-}
+export const TRAJECTORY_AREAS = {
+  networth: [
+    { key: "equity", stackId: "networth", color: "var(--color-equity)" },
+    {
+      key: "untiedDebt",
+      stackId: "networth",
+      color: "var(--color-untiedDebt)",
+    },
+  ],
+  assets: [
+    { key: "cash", stackId: "assets", color: "var(--color-cash)" },
+    { key: "stock", stackId: "assets", color: "var(--color-stock)" },
+    { key: "property", stackId: "assets", color: "var(--color-property)" },
+    { key: "crypto", stackId: "assets", color: "var(--color-crypto)" },
+  ],
+  liabilities: [
+    { key: "mortgage", stackId: "liabilities", color: "var(--color-mortgage)" },
+    { key: "loan", stackId: "liabilities", color: "var(--color-loan)" },
+    { key: "credit", stackId: "liabilities", color: "var(--color-credit)" },
+  ],
+} as const;
 
-export interface NavGroup {
-  label?: string;
-  items: NavItem[];
-}
 
-export interface AppData {
-  user: User;
-  navGroups: NavGroup[];
-}
-
-export const APP_DATA: AppData = {
-  user: {
-    name: "Supakone",
-    email: "supakone.kongprapan@gmail.com",
-    avatar: ReactIcon,
-  },
+export const SYSTEM_DATA: SystemData = {
+  mockUser: MOCK_USER,
   navGroups: [
     {
       label: "Current",
@@ -56,7 +60,7 @@ export const APP_DATA: AppData = {
           icon: LayoutDashboardIcon,
         },
         {
-          title: "Current finance",
+          title: "Current",
           url: "/current",
           icon: ReceiptRussianRubleIcon,
         },
@@ -66,14 +70,9 @@ export const APP_DATA: AppData = {
       label: "Future",
       items: [
         {
-          title: "Plans",
-          url: "/plans",
+          title: "Branches",
+          url: "/branches",
           icon: GitBranchIcon,
-        },
-        {
-          title: "Goals",
-          url: "/goals",
-          icon: TargetIcon,
         },
         {
           title: "Compare",
@@ -86,8 +85,8 @@ export const APP_DATA: AppData = {
       label: "Other",
       items: [
         {
-          title: "History",
-          url: "/history",
+          title: "Logs",
+          url: "/logs",
           icon: HistoryIcon,
         },
         {
