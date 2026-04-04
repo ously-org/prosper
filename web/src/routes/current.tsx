@@ -3,7 +3,6 @@ import { usePageHeader } from "@/hooks/use-page-header";
 import { LastUpdated } from "@/components/finance/Overview/LastUpdated";
 import { FinancialGoalToggle } from "@/components/finance/FinancialGoalToggle";
 import { ActivityLog } from "@/components/finance/ActivityLog";
-import { LiquidCashRatio } from "@/components/finance/SummaryMetric";
 import { CurrentFinanceOverview } from "@/components/finance/Overview";
 import { DashboardGrid } from "@/components/shared/layout/DashboardGrid";
 import { DashboardGridMain } from "@/components/shared/layout/DashboardGridMain";
@@ -32,7 +31,6 @@ function CurrentFinance() {
           <FinancialGoalToggle />
         </DashboardGridMain>
         <DashboardGridSidebar className="h-full">
-          <LiquidCashRatio />
           <ActivityLog />
         </DashboardGridSidebar>
       </DashboardGrid>
