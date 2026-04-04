@@ -64,7 +64,7 @@ function RegisterPage() {
         <AuthFormField
           id="name"
           label="Full Name"
-          placeholder="Erik Magnus"
+          placeholder="Ously Lover"
           value={name}
           icon={User}
           onChange={(e) => setName(e.target.value)}
@@ -77,7 +77,7 @@ function RegisterPage() {
           id="email"
           label="Email address"
           type="email"
-          placeholder="erik@gmail.com"
+          placeholder="info@ously.com"
           value={email}
           icon={Mail}
           onChange={(e) => setEmail(e.target.value)}

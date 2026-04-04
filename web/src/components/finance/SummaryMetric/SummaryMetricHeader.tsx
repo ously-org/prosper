@@ -1,5 +1,3 @@
-import * as React from "react";
-
 interface SummaryMetricHeaderProps {
   title: string;
   rightElement?: React.ReactNode;

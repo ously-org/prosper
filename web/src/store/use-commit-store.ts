@@ -4,6 +4,8 @@ import type {
   CommitActionUpdate,
 } from "@/lib/model/CommitAction";
 import { CommitActionType, EntityType } from "@/lib/enum";
+import { commitActions } from "@/api/finance-api";
+import { queryClient } from "@/lib/query-client";
 
 interface CommitStore {
   stagedActions: CommitAction[];
@@ -11,7 +13,7 @@ interface CommitStore {
   stageAdd: (entityType: EntityType, data: any) => void;
   stageDelete: (entityType: EntityType, entityId: string) => void;
   clearStaging: () => void;
-  commit: () => void;
+  commit: () => Promise<void>;
 }
 
 export const useCommitStore = create<CommitStore>((set, get) => ({
@@ -82,8 +84,27 @@ export const useCommitStore = create<CommitStore>((set, get) => ({
 
   clearStaging: () => set({ stagedActions: [] }),
 
-  commit: () => {
-    console.log("Committing actions:", get().stagedActions);
-    set({ stagedActions: [] });
+  commit: async () => {
+    const actions = get().stagedActions;
+    if (actions.length === 0) return;
+
+    console.log("Committing actions:", actions);
+    
+    try {
+      await commitActions(actions);
+      
+      // Invalidate queries to reflect changes in UI
+      queryClient.invalidateQueries({ queryKey: ["assets"] });
+      queryClient.invalidateQueries({ queryKey: ["liabilities"] });
+      queryClient.invalidateQueries({ queryKey: ["income"] });
+      queryClient.invalidateQueries({ queryKey: ["expenses"] });
+      queryClient.invalidateQueries({ queryKey: ["financial-state"] });
+      queryClient.invalidateQueries({ queryKey: ["goals"] });
+      queryClient.invalidateQueries({ queryKey: ["activities"] });
+      
+      set({ stagedActions: [] });
+    } catch (error) {
+      console.error("Failed to commit actions:", error);
+    }
   },
 }));

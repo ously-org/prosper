@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { usePageHeader } from "@/hooks/use-page-header";
 import { LastUpdated } from "@/components/finance/Overview/LastUpdated";
-import { AssetBreakdownTable } from "@/components/finance/FinancialTable";
+import { FinancialGoalToggle } from "@/components/finance/FinancialGoalToggle";
 import { ActivityLog } from "@/components/finance/ActivityLog";
 import { LiquidCashRatio } from "@/components/finance/SummaryMetric";
 import { CurrentFinanceOverview } from "@/components/finance/Overview";
@@ -27,11 +27,11 @@ function CurrentFinance() {
         <CurrentFinanceOverview />
       </DashboardSection>
 
-      <DashboardGrid>
-        <DashboardGridMain>
-          <AssetBreakdownTable />
+      <DashboardGrid className="items-stretch">
+        <DashboardGridMain className="relative min-h-0">
+          <FinancialGoalToggle />
         </DashboardGridMain>
-        <DashboardGridSidebar>
+        <DashboardGridSidebar className="h-full">
           <LiquidCashRatio />
           <ActivityLog />
         </DashboardGridSidebar>

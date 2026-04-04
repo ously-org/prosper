@@ -43,7 +43,7 @@ function LoginPage() {
 
     await new Promise((resolve) => setTimeout(resolve, 800));
 
-    if (email === "erik@gmail.com" && password === "1234") {
+    if (email === "info@ously.com" && password === "1234") {
       setUser(SYSTEM_DATA.mockUser);
       navigate({ to: "/" });
     } else {

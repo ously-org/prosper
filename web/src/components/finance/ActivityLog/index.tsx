@@ -4,10 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 import { type Activity } from "@/lib/model/Activity";
-import { MOCK_ACTIVITIES } from "@/lib/model/mock";
+import { useActivities } from "@/hooks/use-finance";
 
 
 export function ActivityLog() {
+  const { data: activities = [] } = useActivities();
+
   return (
     <Card className="bg-surface-container-high p-5 flex-1 border border-border/20 shadow-sm">
       <CardHeader className="p-0 mb-4">
@@ -16,7 +18,7 @@ export function ActivityLog() {
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0 space-y-4">
-        {MOCK_ACTIVITIES.map((item: Activity, idx: number) => (
+        {activities.map((item: Activity, idx: number) => (
           <div
             key={idx}
             className="grid grid-cols-[100px_1fr_auto] items-start gap-3 group"

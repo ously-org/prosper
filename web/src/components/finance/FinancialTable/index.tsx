@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -10,13 +10,10 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RiCloseLine } from "@remixicon/react";
-import {
-  useAssets,
-  useLiabilities,
-  useIncome,
-  useExpenses,
-} from "@/hooks/use-assets";
+import { RiCloseLine, RiAddLine } from "@remixicon/react";
+import { useAssets } from "@/hooks/use-assets";
+import { useLiabilities } from "@/hooks/use-liabilities";
+import { useIncome, useExpenses } from "@/hooks/use-budget";
 import {
   mapAssetsToItems,
   mapLiabilitiesToItems,
@@ -28,8 +25,9 @@ import {
 } from "@/components/finance/FinancialTable/adapters";
 import { CollapsibleTableGroup } from "@/components/finance/FinancialTable/CollapsibleGroup";
 import { useCommitStore } from "@/store/use-commit-store";
-import { EntityType } from "@/lib/enum";
-
+import { EntityType, CommitActionType } from "@/lib/enum";
+import { ActionBuilder } from "@/components/shared/ActionBuilder";
+import { cn } from "@/lib/utils";
 
 type TabType = EntityType;
 
@@ -37,7 +35,7 @@ type TabType = EntityType;
 
 function FinancialTableHeader({ children }: { children: React.ReactNode }) {
   return (
-    <CardHeader className="px-6 py-4 bg-surface-container-high flex flex-row justify-between items-center border-b border-border/20 space-y-0">
+    <CardHeader className="px-6 py-4 bg-surface-container-high flex flex-row justify-between items-center border-b border-border/20 space-y-0 shrink-0">
       {children}
     </CardHeader>
   );
@@ -51,12 +49,12 @@ function FinancialTableTitle({ children }: { children: React.ReactNode }) {
   );
 }
 
-function FinancialTableTabs({ 
-  value, 
-  onValueChange 
-}: { 
-  value: TabType; 
-  onValueChange: (v: TabType) => void 
+function FinancialTableTabs({
+  value,
+  onValueChange,
+}: {
+  value: TabType;
+  onValueChange: (v: TabType) => void;
 }) {
   return (
     <Tabs
@@ -65,26 +63,50 @@ function FinancialTableTabs({
       className="w-[400px]"
     >
       <TabsList className="grid w-full grid-cols-4 h-8">
-        <TabsTrigger value={EntityType.Asset} className="text-xs">Assets</TabsTrigger>
-        <TabsTrigger value={EntityType.Liability} className="text-xs">Liabilities</TabsTrigger>
-        <TabsTrigger value={EntityType.Income} className="text-xs">Income</TabsTrigger>
-        <TabsTrigger value={EntityType.Expense} className="text-xs">Expenses</TabsTrigger>
+        <TabsTrigger value={EntityType.Asset} className="text-xs">
+          Assets
+        </TabsTrigger>
+        <TabsTrigger value={EntityType.Liability} className="text-xs">
+          Liabilities
+        </TabsTrigger>
+        <TabsTrigger value={EntityType.Income} className="text-xs">
+          Income
+        </TabsTrigger>
+        <TabsTrigger value={EntityType.Expense} className="text-xs">
+          Expenses
+        </TabsTrigger>
       </TabsList>
     </Tabs>
   );
 }
 
-function FinancialTableActions({ 
-  stagedCount, 
-  onCommit, 
-  onClear 
-}: { 
-  stagedCount: number; 
-  onCommit: () => void; 
-  onClear: () => void 
+function FinancialTableActions({
+  stagedCount,
+  onCommit,
+  onClear,
+  onToggleBuilder,
+  isBuilderOpen,
+}: {
+  stagedCount: number;
+  onCommit: () => void;
+  onClear: () => void;
+  onToggleBuilder: () => void;
+  isBuilderOpen: boolean;
 }) {
   return (
     <div className="flex items-center gap-2">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={onToggleBuilder}
+        className={cn(
+          "h-8 px-3 text-[10px] font-bold border-primary/20 transition-all gap-1.5",
+          isBuilderOpen ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-primary/5 text-primary hover:bg-primary/10"
+        )}
+      >
+        <RiAddLine className="w-3.5 h-3.5" />
+        New Action
+      </Button>
       {stagedCount > 0 && (
         <Button
           variant="outline"
@@ -105,21 +127,21 @@ function FinancialTableActions({
   );
 }
 
-function FinancialTableContent({ 
-  children, 
-  valueLabel, 
+function FinancialTableContent({
+  children,
+  valueLabel,
   rateLabel,
-  isLoading
-}: { 
-  children: React.ReactNode; 
-  valueLabel: string; 
+  isLoading,
+}: {
+  children: React.ReactNode;
+  valueLabel: string;
   rateLabel: string;
   isLoading: boolean;
 }) {
   return (
-    <CardContent className="p-0">
+    <CardContent className="p-0 flex-1 overflow-y-auto">
       <Table>
-        <TableHeader>
+        <TableHeader className="sticky top-0 bg-surface-container-high z-10">
           <TableRow className="border-b border-border/20 hover:bg-transparent">
             <TableHead className="px-6 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest h-auto w-[360px]">
               Category / Name
@@ -138,11 +160,16 @@ function FinancialTableContent({
         <TableBody className="divide-y divide-border/20">
           {isLoading ? (
             <TableRow className="animate-pulse">
-              <TableCell colSpan={5} className="h-40 text-center py-4 text-muted-foreground italic border-0">
+              <TableCell
+                colSpan={5}
+                className="h-40 text-center py-4 text-muted-foreground italic border-0"
+              >
                 Loading data...
               </TableCell>
             </TableRow>
-          ) : children}
+          ) : (
+            children
+          )}
         </TableBody>
       </Table>
     </CardContent>
@@ -153,8 +180,11 @@ function FinancialTableContent({
 
 export function AssetBreakdownTable() {
   const [activeTab, setActiveTab] = useState<TabType>(EntityType.Asset);
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
-  const { stagedActions, commit, clearStaging } = useCommitStore();
+  const [isActionBuilderOpen, setIsActionBuilderOpen] = useState(false);
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(
+    new Set(),
+  );
+  const { stagedActions, commit, clearStaging, stageAdd, stageUpdate, stageDelete } = useCommitStore();
 
   const toggleCategory = (category: string) => {
     const newExpanded = new Set(expandedCategories);
@@ -173,7 +203,7 @@ export function AssetBreakdownTable() {
 
   const getTableData = () => {
     const config = FINANCIAL_TABLE_CONTROLS[activeTab];
-    
+
     switch (activeTab) {
       case EntityType.Asset:
         return {
@@ -217,31 +247,63 @@ export function AssetBreakdownTable() {
     valueKey,
   } = getTableData();
 
-  const mergedItems = mergeStagedActions(baseItems, stagedActions, entityType, valueKey);
+  const mergedItems = mergeStagedActions(
+    baseItems,
+    stagedActions,
+    entityType,
+    valueKey,
+  );
   const groupedData = groupItemsByCategory(mergedItems);
 
   return (
-    <Card className="col-span-12 xl:col-span-8 bg-surface-container overflow-hidden flex flex-col shadow-sm border border-border/20">
+    <>
       <FinancialTableHeader>
         <div className="flex items-center gap-6">
           <FinancialTableTitle>Financial Breakdown</FinancialTableTitle>
           <FinancialTableTabs value={activeTab} onValueChange={setActiveTab} />
         </div>
-        <FinancialTableActions 
-          stagedCount={stagedActions.length} 
-          onCommit={commit} 
-          onClear={clearStaging} 
+        <FinancialTableActions
+          stagedCount={stagedActions.length}
+          onCommit={commit}
+          onClear={clearStaging}
+          onToggleBuilder={() => setIsActionBuilderOpen(!isActionBuilderOpen)}
+          isBuilderOpen={isActionBuilderOpen}
         />
       </FinancialTableHeader>
-      
-      <FinancialTableContent 
-        isLoading={isLoading} 
-        valueLabel={valueLabel} 
+
+      {isActionBuilderOpen && (
+        <ActionBuilder
+          actions={stagedActions}
+          onActionsChange={(newActions) => {
+            // Find the newly added action
+            const latestAction = newActions[newActions.length - 1];
+            if (latestAction) {
+              if (latestAction.type === CommitActionType.Add) {
+                stageAdd(latestAction.entityType, latestAction.data);
+              } else if (latestAction.type === CommitActionType.Update) {
+                stageUpdate(latestAction.entityType, latestAction.entityId, latestAction.data);
+              } else if (latestAction.type === CommitActionType.Delete) {
+                stageDelete(latestAction.entityType, latestAction.entityId);
+              }
+            }
+          }}
+          title="Manual Staging Area"
+          showActionsList={false}
+          className="border-b"
+        />
+      )}
+
+      <FinancialTableContent
+        isLoading={isLoading}
+        valueLabel={valueLabel}
         rateLabel={rateLabel}
       >
         {groupedData.length === 0 ? (
           <TableRow>
-            <TableCell colSpan={5} className="h-40 text-center py-4 text-muted-foreground italic border-0">
+            <TableCell
+              colSpan={5}
+              className="h-40 text-center py-4 text-muted-foreground italic border-0"
+            >
               No data available.
             </TableCell>
           </TableRow>
@@ -258,6 +320,6 @@ export function AssetBreakdownTable() {
           ))
         )}
       </FinancialTableContent>
-    </Card>
+    </>
   );
 }

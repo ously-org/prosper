@@ -1,4 +1,4 @@
-import { useActivities } from "@/hooks/use-assets";
+import { useActivities } from "@/hooks/use-finance";
 import { getLatestActivity } from "@/lib/model/Activity";
 import { format } from "date-fns";
 
@@ -15,7 +15,7 @@ export function LastUpdated() {
     );
   }
 
-  const lastUpdatedStr = latestActivity 
+  const lastUpdatedStr = latestActivity
     ? format(new Date(latestActivity.date), "yyyy-MM-dd HH:mm:ss 'UTC'")
     : "No Activity";
 
@@ -24,9 +24,7 @@ export function LastUpdated() {
       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
         Last Updated
       </p>
-      <p className="font-mono text-xs text-foreground">
-        {lastUpdatedStr}
-      </p>
+      <p className="font-mono text-xs text-foreground">{lastUpdatedStr}</p>
     </div>
   );
 }

@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { usePageHeader } from "@/hooks/use-page-header";
-import { MetricCards } from "@/components/finance/SummaryMetric";
+import { MetricCards } from "@/components/finance/MetricCards";
 import { PlanDashboard } from "@/components/roadmap/PlanDashboard";
-import { useGoals, useUser } from "@/hooks/use-assets";
+import { useGoals } from "@/hooks/use-roadmap";
+import { useUser } from "@/hooks/use-user";
 import { GoalType } from "@/lib/enum";
 import { type TimeFixedGoal } from "@/lib/model/Goal.TimeFixed";
 import {

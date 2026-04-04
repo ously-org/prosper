@@ -4,13 +4,22 @@ import { Input } from "@/components/ui/input";
 interface EditableCellProps {
   value: string | number;
   onSave: (newValue: string | number) => void;
-  type?: "text" | "number" | "percentage";
+  type?: "text" | "number" | "percentage" | "date";
+  displayValue?: string;
   className?: string;
   prefix?: string;
   suffix?: string;
 }
 
-export function EditableCell({ value, onSave, type = "text", className, prefix, suffix }: EditableCellProps) {
+export function EditableCell({ 
+  value, 
+  onSave, 
+  type = "text", 
+  displayValue,
+  className, 
+  prefix, 
+  suffix 
+}: EditableCellProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [localValue, setLocalValue] = useState(value);
 
@@ -41,20 +50,24 @@ export function EditableCell({ value, onSave, type = "text", className, prefix, 
         onChange={(e) => setLocalValue(e.target.value)}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
-        className="h-7 py-0 px-1 text-xs font-mono w-full"
-        type={type === "text" ? "text" : "number"}
+        className="h-7 py-0 px-1 text-xs font-mono w-full min-w-[80px]"
+        type={type === "date" ? "date" : type === "text" ? "text" : "number"}
       />
     );
   }
+
+  const renderedValue = displayValue ?? (
+    type === "number" || type === "percentage" 
+      ? Number(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      : value
+  );
 
   return (
     <span 
       onClick={() => setIsEditing(true)}
       className={`cursor-pointer hover:bg-primary/10 px-1 rounded transition-colors ${className}`}
     >
-      {prefix}{type === "number" || type === "percentage" 
-        ? Number(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-        : value}{suffix}
+      {prefix}{renderedValue}{suffix}
     </span>
   );
 }

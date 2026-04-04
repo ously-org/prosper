@@ -1,11 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { usePageHeader } from "@/hooks/use-page-header";
-import {
-  useBranches,
-  useUser,
-  useGoals,
-  useFinancialState,
-} from "@/hooks/use-assets";
+import { useBranches, useGoals } from "@/hooks/use-roadmap";
+import { useUser } from "@/hooks/use-user";
+import { useFinancialState } from "@/hooks/use-finance";
 import { BranchCard } from "@/components/roadmap/BranchCard";
 import { type User } from "@/lib/model/User";
 import { DashboardContent } from "@/components/shared/layout/DashboardContent";
