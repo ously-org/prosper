@@ -27,7 +27,7 @@ export const FullTrajectoryChart = ({
       sourceData.length > 0
         ? new Date(sourceData[0].date)
         : new Date("2024-01-01");
-    
+
     const monthsToShow = parseInt(timeRange, 10);
 
     const endDate = new Date(referenceDate);

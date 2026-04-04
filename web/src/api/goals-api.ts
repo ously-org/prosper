@@ -6,9 +6,8 @@ import type { MeasurableGoal, MeasurableGoalChange } from "@/lib/model/Goal.Meas
 import { applyMeasurableGoalChange } from "@/lib/model/Goal.Measurable";
 import type { CommitmentGoal, CommitmentGoalChange } from "@/lib/model/Goal.Commitment";
 import { applyCommitmentGoalChange } from "@/lib/model/Goal.Commitment";
-import { goals, setGoals, activities } from "./state";
+import { goals, setGoals } from "./state";
 import { delay } from "./utils";
-import type { Activity } from "@/lib/model/Activity";
 
 export async function fetchGoals() {
   await delay(300);
@@ -69,19 +68,6 @@ export async function commitGoalChanges(data: {
   }
 
   setGoals(newGoals);
-
-  // 2. Generate activity log
-  const changeCount = data.adds.length + data.deletes.length + data.updates.length;
-  if (changeCount > 0) {
-    const newActivity: Activity = {
-      category: "GOAL",
-      title: `Strategic goals updated: ${changeCount} change${changeCount > 1 ? "s" : ""}`,
-      date: new Date().toISOString().split("T")[0],
-      amount: "N/A",
-      variant: "chart-2",
-    };
-    activities.unshift(newActivity);
-  }
 
   return { success: true };
 }

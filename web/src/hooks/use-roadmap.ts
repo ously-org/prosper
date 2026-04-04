@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchGoals, fetchBranches, fetchCommits } from "@/api/finance-api";
+import { fetchGoals, fetchBranches } from "@/api/finance-api";
 
 export function useGoals() {
   return useQuery({
@@ -12,12 +12,5 @@ export function useBranches() {
   return useQuery({
     queryKey: ["branches"],
     queryFn: fetchBranches,
-  });
-}
-
-export function useCommits() {
-  return useQuery({
-    queryKey: ["commits"],
-    queryFn: fetchCommits,
   });
 }

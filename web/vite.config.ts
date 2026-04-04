@@ -16,7 +16,7 @@ export default defineConfig({
     cloudflare(),
     tanstackRouter({
       target: "react",
-      autoCodeSplitting: true,
+      autoCodeSplitting: false,
     }),
     react(),
   ],

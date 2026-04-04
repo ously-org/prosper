@@ -32,10 +32,11 @@ All components in this directory MUST follow the **Standalone Domain Component**
 
 - [x] **Layout Families:** `DashboardGrid`, `DashboardSection` moved to `shared/layout`.
 - [x] **Finance Family:** 
-  - `SummaryMetric` (Unified LiquidCashRatio, NetWorthPulse, MetricCards).
+  - `MetricCards` (Refactored to use centralized `MetricCard`).
+  - `LiquidCashRatio` (Refactored to use centralized `MetricCard`).
   - `FinancialTable` (Refactored Asset/Liability tables).
-  - `ActivityLog` & `Overview` migrated.
-- [x] **Roadmap Family:** `PlanDashboard`, `ActionRoadmap`, and `BranchCard` migrated.
+  - `ActivityLog` (Refactored to use `OuslyListCard`) & `Overview` (Refactored to use `OuslyChartCard`) migrated.
+- [x] **Roadmap Family:** `PlanDashboard` (Refactored to use `OuslyChartCard`), `ActionRoadmap` (Refactored to use `OuslyListCard`), and `BranchCard` (Refactored to use `OuslyCard`) migrated.
 - [x] **Auth Family:** `AuthForm` structure established (Login/Register moved).
 
 ## Refactoring Checklist

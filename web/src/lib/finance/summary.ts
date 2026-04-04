@@ -34,7 +34,7 @@ export function deriveBranchMetrics(
   user: User,
   initialGoals: Goal[]
 ): BranchMetrics {
-  // 1. Reconstruct the financial state by applying all commits in the branch
+  // 1. Reconstruct the financial state by applying history and then branch commits
   let state: FinancialState = {
     assets: [...user.initialFinancialState.assets],
     liabilities: [...user.initialFinancialState.liabilities],
@@ -42,8 +42,18 @@ export function deriveBranchMetrics(
     expenses: [...user.initialFinancialState.expenses],
   };
 
-  for (const commit of branch.commits) {
-    state = applyCommitAction(commit, state);
+  // Apply history commits first (from the past branch)
+  if (user.pastBranch) {
+    for (const commit of user.pastBranch.commits) {
+      state = applyCommitAction(commit, state);
+    }
+  }
+
+  // Then apply branch-specific commits (if they aren't the same as the past branch)
+  if (user.pastBranch?.id !== branch.id) {
+    for (const commit of branch.commits) {
+      state = applyCommitAction(commit, state);
+    }
   }
 
   // 2. Get the branch-specific goals (initial goals + branch level changes)

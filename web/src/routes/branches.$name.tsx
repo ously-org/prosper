@@ -10,7 +10,8 @@ import {
 import { deriveBranchMetrics } from "@/lib/finance/summary";
 import { type User } from "@/lib/model/User";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { OuslyDetailCard } from "@/components/shared/OuslyDetailCard";
+import { OuslyChartCard } from "@/components/shared/OuslyChartCard";
 import { GoalType } from "@/lib/enum";
 import { type TimeFixedGoal } from "@/lib/model/Goal.TimeFixed";
 import { Target, GitCommit, GitBranch } from "lucide-react";
@@ -103,24 +104,30 @@ function PlanSummary() {
     <DashboardContent className="pb-12">
       {/* Top Section: Chart */}
       <DashboardSection>
-        <div className="h-[450px]">
-          <TrajectoryChart
-            layout="split"
-            data={metrics.snapshots.map((s) => ({
-              date: `${s.year}-01-01`,
-              netWorth: s.netWorth,
-              equity: s.netWorth,
-              untiedDebt: 0,
-              cash: s.netWorth * 0.1,
-              stock: s.netWorth * 0.6,
-              property: s.netWorth * 0.3,
-              crypto: 0,
-              totalAssets: s.netWorth,
-              totalLiabilities: 0,
-            }))}
-            goals={chartGoals}
-          />
-        </div>
+        <OuslyChartCard
+          title="Projection Analysis"
+          description="Detailed simulation results and asset breakdown"
+          className="h-full bg-surface-container-low"
+        >
+          <div className="h-[400px]">
+            <TrajectoryChart
+              layout="split"
+              data={metrics.snapshots.map((s) => ({
+                date: `${s.year}-01-01`,
+                netWorth: s.netWorth,
+                equity: s.netWorth,
+                untiedDebt: 0,
+                cash: s.netWorth * 0.1,
+                stock: s.netWorth * 0.6,
+                property: s.netWorth * 0.3,
+                crypto: 0,
+                totalAssets: s.netWorth,
+                totalLiabilities: 0,
+              }))}
+              goals={chartGoals}
+            />
+          </div>
+        </OuslyChartCard>
       </DashboardSection>
 
       {/* Bottom Section: Branch History & Modifications */}
@@ -140,15 +147,11 @@ function PlanSummary() {
               </div>
             ) : (
               branch.commits.map((commit, idx) => (
-                <Card
+                <OuslyDetailCard
                   key={commit.id}
-                  className="bg-surface-container border-none shadow-none relative overflow-hidden"
-                >
-                  {idx !== branch.commits.length - 1 && (
-                    <div className="absolute left-[39px] top-12 bottom-[-16px] w-[2px] bg-border/20 z-0" />
-                  )}
-                  <CardContent className="p-4 flex gap-4 relative z-10 w-full">
-                    <div className="w-12 shrink-0 flex flex-col items-center">
+                  className="relative"
+                  leftElement={
+                    <div className="w-12 flex flex-col items-center">
                       <div className="w-10 h-10 rounded-full bg-surface-container-highest border border-border/20 flex items-center justify-center p-0.5 overflow-hidden ring-2 ring-background">
                         {commit.author?.avatar ? (
                           <img
@@ -161,32 +164,36 @@ function PlanSummary() {
                         )}
                       </div>
                     </div>
-                    <div className="flex-1 min-w-0 pt-1">
-                      <div className="flex items-center justify-between gap-4 mb-2">
-                        <h4 className="font-bold font-mono text-sm leading-tight truncate">
-                          {commit.message}
-                        </h4>
-                        <span className="text-[10px] font-mono text-muted-foreground shrink-0 tabular-nums">
-                          {new Date(commit.timestamp).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        <Badge
-                          variant="outline"
-                          className="text-[9px] font-mono uppercase bg-surface-container-high border-border/10"
-                        >
-                          {commit.actions.length} action(s)
-                        </Badge>
-                        <Badge
-                          variant="secondary"
-                          className="text-[9px] font-mono bg-surface-container-low text-muted-foreground font-normal border-border/0"
-                        >
-                          {commit.id.substring(0, 7)}
-                        </Badge>
-                      </div>
+                  }
+                >
+                  {idx !== branch.commits.length - 1 && (
+                    <div className="absolute left-[39px] top-12 bottom-[-16px] w-[2px] bg-border/20 z-0" />
+                  )}
+                  <div className="flex-1 min-w-0 pt-1">
+                    <div className="flex items-center justify-between gap-4 mb-2">
+                      <h4 className="font-bold font-mono text-sm leading-tight truncate">
+                        {commit.message}
+                      </h4>
+                      <span className="text-[10px] font-mono text-muted-foreground shrink-0 tabular-nums">
+                        {new Date(commit.timestamp).toLocaleDateString()}
+                      </span>
                     </div>
-                  </CardContent>
-                </Card>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge
+                        variant="outline"
+                        className="text-[9px] font-mono uppercase bg-surface-container-high border-border/10"
+                      >
+                        {commit.actions.length} action(s)
+                      </Badge>
+                      <Badge
+                        variant="secondary"
+                        className="text-[9px] font-mono bg-surface-container-low text-muted-foreground font-normal border-border/0"
+                      >
+                        {commit.id.substring(0, 7)}
+                      </Badge>
+                    </div>
+                  </div>
+                </OuslyDetailCard>
               ))
             )}
           </div>
@@ -214,83 +221,82 @@ function PlanSummary() {
                 );
 
                 return (
-                  <Card
+                  <OuslyDetailCard
                     key={idx}
-                    className="bg-surface-container border-none shadow-none"
-                  >
-                    <CardContent className="p-4 flex gap-4">
+                    leftElement={
                       <div
                         className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-1 ${isAchieved ? "bg-chart-2/20 text-chart-2" : "bg-surface-container-highest text-muted-foreground"}`}
                       >
                         <Target className="w-4 h-4" />
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2 mb-3">
-                          <div>
-                            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest block mb-0.5">
-                              Overrides:
-                            </span>
-                            <h4 className="font-bold font-mono text-xs">
-                              {originalGoal?.name || change.id}
-                            </h4>
-                          </div>
-                          {isAchieved && (
-                            <Badge
-                              variant="outline"
-                              className="text-[9px] font-mono text-chart-2 border-chart-2/30 bg-chart-2/5"
-                            >
-                              Achieved
-                            </Badge>
-                          )}
+                    }
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <div>
+                          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest block mb-0.5">
+                            Overrides:
+                          </span>
+                          <h4 className="font-bold font-mono text-xs">
+                            {originalGoal?.name || change.id}
+                          </h4>
                         </div>
-
-                        <div className="space-y-2">
-                          {change.nameTo !== undefined && (
-                            <div className="flex items-center text-[10px] font-mono text-muted-foreground">
-                              <span className="w-16">Name:</span>
-                              <span className="line-through opacity-50 mr-2">
-                                {originalGoal?.name}
-                              </span>
-                              <span className="text-primary">
-                                {change.nameTo}
-                              </span>
-                            </div>
-                          )}
-                          {(change as any).targetDateTo !== undefined && (
-                            <div className="flex items-center text-[10px] font-mono text-muted-foreground">
-                              <span className="w-16">Target:</span>
-                              <span className="text-primary">
-                                {new Date(
-                                  (change as any).targetDateTo,
-                                ).getFullYear()}
-                              </span>
-                            </div>
-                          )}
-                          {(change as any).targetValueBy !== undefined && (
-                            <div className="flex items-center text-[10px] font-mono text-muted-foreground">
-                              <span className="w-16">Amount:</span>
-                              <span className="text-chart-2">
-                                +
-                                {currencyFormatter.format(
-                                  (change as any).targetValueBy,
-                                )}
-                              </span>
-                            </div>
-                          )}
-                          {change.isCompletedTo !== undefined && (
-                            <div className="flex items-center text-[10px] font-mono text-muted-foreground">
-                              <span className="w-16">Status:</span>
-                              <span className="text-chart-2">
-                                {change.isCompletedTo
-                                  ? "Completed"
-                                  : "Pending"}
-                              </span>
-                            </div>
-                          )}
-                        </div>
+                        {isAchieved && (
+                          <Badge
+                            variant="outline"
+                            className="text-[9px] font-mono text-chart-2 border-chart-2/30 bg-chart-2/5"
+                          >
+                            Achieved
+                          </Badge>
+                        )}
                       </div>
-                    </CardContent>
-                  </Card>
+
+                      <div className="space-y-2">
+                        {change.nameTo !== undefined && (
+                          <div className="flex items-center text-[10px] font-mono text-muted-foreground">
+                            <span className="w-16">Name:</span>
+                            <span className="line-through opacity-50 mr-2">
+                              {originalGoal?.name}
+                            </span>
+                            <span className="text-primary">
+                              {change.nameTo}
+                            </span>
+                          </div>
+                        )}
+                        {(change as any).targetDateTo !== undefined && (
+                          <div className="flex items-center text-[10px] font-mono text-muted-foreground">
+                            <span className="w-16">Target:</span>
+                            <span className="text-primary">
+                              {new Date(
+                                (change as any).targetDateTo,
+                              ).getFullYear()}
+                            </span>
+                          </div>
+                        )}
+                        {(change as any).targetValueBy !== undefined && (
+                          <div className="flex items-center text-[10px] font-mono text-muted-foreground">
+                            <span className="w-16">Amount:</span>
+                            <span className="text-chart-2">
+                              +
+                              {currencyFormatter.format(
+                                (change as any).targetValueBy,
+                              )}
+                            </span>
+                          </div>
+                        )}
+                        {change.isCompletedTo !== undefined && (
+                          <div className="flex items-center text-[10px] font-mono text-muted-foreground">
+                            <span className="w-16">Status:</span>
+                            <span className="text-chart-2">
+                              {change.isCompletedTo
+                                ? "Completed"
+                                : "Pending"}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </OuslyDetailCard>
                 );
               })
             )}

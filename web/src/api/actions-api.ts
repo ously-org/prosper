@@ -4,18 +4,17 @@ import type { Income } from "@/lib/model/Income";
 import type { Expense } from "@/lib/model/Expense";
 import type { CommitAction } from "@/lib/model/CommitAction";
 import { CommitActionType, EntityType } from "@/lib/enum";
-import { assets, liabilities, income, expenses, activities } from "./state";
+import { assets, liabilities, income, expenses } from "./state";
 import { delay } from "./utils";
 import { internalApplyAssetChange, internalReplaceAsset } from "./assets-api";
 import { internalApplyLiabilityChange, internalReplaceLiability } from "./liabilities-api";
 import { internalApplyIncomeChange, internalReplaceIncome } from "./budget-api";
 import { internalApplyExpenseChange, internalReplaceExpense } from "./budget-api";
-import type { Activity } from "@/lib/model/Activity";
 
 export async function commitActions(actions: CommitAction[]) {
   await delay(500);
 
-  if (actions.length === 0) return { success: true, activities: [] };
+  if (actions.length === 0) return { success: true };
 
   // 1. Process actions
   for (const action of actions) {
@@ -54,16 +53,5 @@ export async function commitActions(actions: CommitAction[]) {
     }
   }
 
-  // 2. Generate activity log
-  const newActivity: Activity = {
-    category: "COMMIT",
-    title: `Manual update: ${actions.length} action${actions.length > 1 ? "s" : ""}`,
-    date: new Date().toISOString().split("T")[0],
-    amount: "N/A",
-    variant: "primary",
-  };
-  
-  activities.unshift(newActivity);
-
-  return { success: true, activities: [newActivity] };
+  return { success: true };
 }

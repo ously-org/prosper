@@ -1,10 +1,13 @@
 import { useActivities } from "@/hooks/use-finance";
-import { getLatestActivity } from "@/lib/model/Activity";
 import { format } from "date-fns";
 
 export function LastUpdated() {
   const { data: activities = [], isLoading } = useActivities();
-  const latestActivity = getLatestActivity(activities);
+  
+  // Sort activities by date to find the latest
+  const latestActivity = activities.length > 0 
+    ? [...activities].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())[0]
+    : undefined;
 
   if (isLoading) {
     return (

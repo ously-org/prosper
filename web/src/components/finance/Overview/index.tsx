@@ -17,13 +17,6 @@ import {
 } from "recharts";
 
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -69,58 +62,7 @@ const performanceChartConfig = {
   liabilities: { label: "Liabilities", color: "var(--destructive)" },
 } satisfies ChartConfig;
 
-// --- Compound Subcomponents ---
-
 type TabType = "performance" | "allocation" | "cashflow";
-
-interface HeaderProps {
-  activeTab: TabType;
-  onTabChange: (tab: TabType) => void;
-}
-
-function CapitalOverviewHeader({ activeTab, onTabChange }: HeaderProps) {
-  return (
-    <CardHeader className="flex flex-col items-stretch border-b border-surface-container-high p-0! sm:flex-row">
-      <div className="flex flex-1 flex-col justify-center gap-1 px-6 pb-3 sm:pb-0">
-        <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-widest font-mono">
-          Capital Overview
-        </CardTitle>
-        <CardDescription className="text-[10px] font-mono">
-          {activeTab === "performance"
-            ? "Historical analysis of the last 12 months"
-            : activeTab === "allocation"
-              ? "Current capital distribution architecture"
-              : "Income and Expense cashflow distribution map"}
-        </CardDescription>
-      </div>
-      <div className="flex">
-        {[
-          {
-            id: "performance",
-            label: "Historical Performance",
-            title: "Performance",
-          },
-          { id: "allocation", label: "Asset Allocation", title: "Allocation" },
-          { id: "cashflow", label: "Income & Expense", title: "Cashflow" },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            data-active={activeTab === tab.id}
-            className="flex flex-1 flex-col justify-center gap-1 border-t border-surface-container-high px-6 py-4 text-left first:border-l-0 even:border-l data-[active=true]:bg-surface-container-high sm:border-t-0 sm:border-l sm:px-8 sm:py-6 transition-colors outline-none min-w-[200px]"
-            onClick={() => onTabChange(tab.id as TabType)}
-          >
-            <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-tight">
-              {tab.label}
-            </span>
-            <span className="text-xl leading-none font-bold sm:text-2xl font-mono tracking-tighter">
-              {tab.title}
-            </span>
-          </button>
-        ))}
-      </div>
-    </CardHeader>
-  );
-}
 
 function PerformanceChart() {
   return (
@@ -378,6 +320,8 @@ function CashflowChart({ waterfallData }: { waterfallData: any[] }) {
 
 // --- Main Component ---
 
+import { OuslyChartCard } from "@/components/shared/OuslyChartCard";
+
 export function CurrentFinanceOverview() {
   const [activeTab, setActiveTab] = React.useState<TabType>("performance");
   const { data: assets } = useAssets();
@@ -385,7 +329,26 @@ export function CurrentFinanceOverview() {
   const { data: income } = useIncome();
   const { data: expenses } = useExpenses();
 
+  const tabs: { id: TabType; title: string; description: string }[] = [
+    {
+      id: "performance",
+      title: "Performance",
+      description: "Historical analysis of the last 12 months",
+    },
+    {
+      id: "allocation",
+      title: "Allocation",
+      description: "Current capital distribution architecture",
+    },
+    {
+      id: "cashflow",
+      title: "Cashflow",
+      description: "Income and Expense cashflow distribution map",
+    },
+  ];
+
   const waterfallData = React.useMemo(() => {
+    // ... same waterfall logic
     let currentSum = 0;
     const data = [];
     if (income) {
@@ -474,25 +437,31 @@ export function CurrentFinanceOverview() {
     },
   ];
 
+  const activeTabData = tabs.find((t) => t.id === activeTab);
+
   return (
-    <Card className="col-span-12 py-4 sm:py-0 bg-surface-container border-none shadow-none ring-0">
-      <CapitalOverviewHeader activeTab={activeTab} onTabChange={setActiveTab} />
-      <CardContent className="px-2 sm:p-6 min-h-[400px]">
-        {activeTab === "performance" ? (
-          <PerformanceChart />
-        ) : activeTab === "allocation" ? (
-          <AllocationCharts
-            assetData={assetChartData}
-            liabilityData={liabilityChartData}
-            netWorthData={netWorthChartData}
-            totalNetWorth={totalNetWorth}
-            totalAssets={totalAssets}
-            totalLiabilities={totalLiabilities}
-          />
-        ) : (
-          <CashflowChart waterfallData={waterfallData} />
-        )}
-      </CardContent>
-    </Card>
+    <OuslyChartCard
+      title="Capital Overview"
+      description={activeTabData?.description}
+      tabs={tabs}
+      activeTab={activeTab}
+      onTabChange={(id) => setActiveTab(id as TabType)}
+      className="bg-surface-container border-none shadow-none ring-0 py-4 sm:py-0"
+    >
+      {activeTab === "performance" ? (
+        <PerformanceChart />
+      ) : activeTab === "allocation" ? (
+        <AllocationCharts
+          assetData={assetChartData}
+          liabilityData={liabilityChartData}
+          netWorthData={netWorthChartData}
+          totalNetWorth={totalNetWorth}
+          totalAssets={totalAssets}
+          totalLiabilities={totalLiabilities}
+        />
+      ) : (
+        <CashflowChart waterfallData={waterfallData} />
+      )}
+    </OuslyChartCard>
   );
 }

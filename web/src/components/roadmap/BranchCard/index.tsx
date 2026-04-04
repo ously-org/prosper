@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
@@ -20,6 +19,7 @@ import { type TimeFixedGoal } from "@/lib/model/Goal.TimeFixed";
 import { type MeasurableGoal } from "@/lib/model/Goal.Measurable";
 import { CheckCircle2, XCircle, AlertCircle } from "lucide-react";
 import { useMemo } from "react";
+import { OuslyCard } from "@/components/shared/OuslyCard";
 
 interface BranchCardProps {
   branch: Branch;
@@ -212,7 +212,7 @@ export function BranchCard({
       params={{ name: branch.name }}
       className="block transition-transform hover:scale-[1.01] active:scale-[0.99]"
     >
-      <Card className="flex flex-col md:flex-row overflow-hidden bg-surface-container border-none shadow-none p-6 gap-6 min-h-[280px]">
+      <OuslyCard className="flex flex-col md:flex-row overflow-hidden bg-surface-container border-none shadow-none p-6 gap-6 min-h-[280px]">
         <BranchCardInfo>
           <BranchCardHeader name={branch.name} isPrimary={branch.id === "main"} />
           <BranchCardStats 
@@ -239,7 +239,7 @@ export function BranchCard({
             syncId={syncId}
           />
         </BranchCardVisual>
-      </Card>
+      </OuslyCard>
     </Link>
   );
 }
