@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { usePageHeader } from "@/hooks/use-page-header";
-import { LastUpdated } from "@/components/finance/Overview/LastUpdated";
-import { FinancialGoalToggle } from "@/components/finance/FinancialGoalToggle";
-import { ActivityLog } from "@/components/finance/ActivityLog";
-import { CurrentFinanceOverview } from "@/components/finance/Overview";
-import { DashboardGrid } from "@/components/shared/layout/DashboardGrid";
-import { DashboardGridMain } from "@/components/shared/layout/DashboardGridMain";
-import { DashboardGridSidebar } from "@/components/shared/layout/DashboardGridSidebar";
-import { DashboardSection } from "@/components/shared/layout/DashboardSection";
+import { LastUpdated } from "@/features/Overview/LastUpdated";
+import { FinancialGoalToggle } from "@/features/FinancialGoalToggle/FinancialGoalToggle";
+import { ActivityLog } from "@/features/ActivityLog/ActivityLog";
+import { CurrentFinanceOverview } from "@/features/Overview/Overview";
+import { DashboardGrid } from "@/components/layout/DashboardGrid";
+import { DashboardGridMain } from "@/components/layout/DashboardGridMain";
+import { DashboardGridSidebar } from "@/components/layout/DashboardGridSidebar";
+import { DashboardSection } from "@/components/layout/DashboardSection";
 
 export const Route = createFileRoute("/current")({
   component: CurrentFinance,

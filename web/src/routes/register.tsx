@@ -2,12 +2,12 @@ import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Eye, EyeOff, User, Mail, ShieldCheck } from "lucide-react";
 import { useAuthLayout } from "@/hooks/use-auth-layout";
-import { AuthForm } from "@/components/auth/AuthForm";
-import { AuthFormField } from "@/components/auth/AuthFormField";
-import { AuthFormError } from "@/components/auth/AuthFormError";
-import { AuthFormAction } from "@/components/auth/AuthFormAction";
-import { AuthFormAlternative } from "@/components/auth/AuthFormAlternative";
-import { AuthFormNavigation } from "@/components/auth/AuthFormNavigation";
+import { AuthForm } from "@/features/Auth/components/AuthForm";
+import { AuthFormField } from "@/features/Auth/components/AuthFormField";
+import { AuthFormError } from "@/features/Auth/components/AuthFormError";
+import { AuthFormAction } from "@/features/Auth/components/AuthFormAction";
+import { AuthFormAlternative } from "@/features/Auth/components/AuthFormAlternative";
+import { AuthFormNavigation } from "@/features/Auth/components/AuthFormNavigation";
 
 export const Route = createFileRoute("/register")({
   component: RegisterPage,
