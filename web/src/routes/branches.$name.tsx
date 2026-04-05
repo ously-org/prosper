@@ -6,7 +6,7 @@ import { useFinancialState } from "@/hooks/use-finance";
 import {
   TrajectoryChart,
   type ChartGoalMarker,
-} from "@/components/shared/TrajectoryChart/TrajectoryChart";
+} from "@/components/TrajectoryChart/TrajectoryChart";
 import { deriveBranchMetrics } from "@/lib/finance/summary";
 import { type User } from "@/lib/model/User";
 import { Badge } from "@/components/ui/badge";
@@ -15,11 +15,11 @@ import { GoalType } from "@/lib/enum";
 import { type TimeFixedGoal } from "@/lib/model/Goal.TimeFixed";
 import { Target, GitCommit, GitBranch } from "lucide-react";
 import { useMemo } from "react";
-import { DashboardContent } from "@/components/shared/layout/DashboardContent";
-import { DashboardGrid } from "@/components/shared/layout/DashboardGrid";
-import { DashboardGridMain } from "@/components/shared/layout/DashboardGridMain";
-import { DashboardGridSidebar } from "@/components/shared/layout/DashboardGridSidebar";
-import { DashboardSection } from "@/components/shared/layout/DashboardSection";
+import { DashboardContent } from "@/components/layout/DashboardContent";
+import { DashboardGrid } from "@/components/layout/DashboardGrid";
+import { DashboardGridMain } from "@/components/layout/DashboardGridMain";
+import { DashboardGridSidebar } from "@/components/layout/DashboardGridSidebar";
+import { DashboardSection } from "@/components/layout/DashboardSection";
 
 export const Route = createFileRoute("/branches/$name")({
   component: PlanSummary,

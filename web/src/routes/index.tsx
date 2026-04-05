@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { usePageHeader } from "@/hooks/use-page-header";
-import { MetricCards } from "@/components/finance/MetricCards";
-import { PlanDashboard } from "@/components/roadmap/PlanDashboard";
+import { MetricCards } from "@/features/MetricCards/MetricCards";
+import { PlanDashboard } from "@/features/PlanDashboard/PlanDashboard";
 import { useGoals } from "@/hooks/use-roadmap";
 import { useUser } from "@/hooks/use-user";
 import { GoalType } from "@/lib/enum";
@@ -9,8 +9,8 @@ import { type TimeFixedGoal } from "@/lib/model/Goal.TimeFixed";
 import {
   chartData,
   type ChartGoalMarker,
-} from "@/components/shared/TrajectoryChart/TrajectoryChart";
-import { DashboardSection } from "@/components/shared/layout/DashboardSection";
+} from "@/components/TrajectoryChart/TrajectoryChart";
+import { DashboardSection } from "@/components/layout/DashboardSection";
 
 export const Route = createFileRoute("/")({
   component: Index,

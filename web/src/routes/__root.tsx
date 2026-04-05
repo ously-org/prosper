@@ -1,10 +1,10 @@
 import { createRootRoute, Outlet, useLocation } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { DashboardLayout } from "@/layout/dashboard/DashboardLayout";
-import { AuthLayout } from "@/layout/auth/AuthLayout";
+import { DashboardLayout } from "@/components/layout/dashboard/DashboardLayout";
+import { AuthLayout } from "@/components/layout/auth/AuthLayout";
 import { useHeaderStore } from "@/store/use-header-store";
-import { Header } from "@/layout/shared/Header";
-import { SystemAlertsFooter } from "@/layout/shared/SystemAlertsFooter";
+import { Header } from "@/components/layout/shared/Header";
+import { SystemAlertsFooter } from "@/components/layout/shared/SystemAlertsFooter";
 
 export const Route = createRootRoute({
   // beforeLoad: ({ location }) => {

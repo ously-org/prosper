@@ -1,9 +1,7 @@
 import {
   AssetType,
-  LiabilityType,
   Frequency,
   GoalType,
-  GoalMetric,
   CommitActionType,
   EntityType,
 } from "@/lib/enum";

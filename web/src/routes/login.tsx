@@ -4,13 +4,13 @@ import { Eye, EyeOff, Mail } from "lucide-react";
 import { useUserStore } from "@/store/use-user-store";
 import { SYSTEM_DATA } from "@/lib/const";
 import { useAuthLayout } from "@/hooks/use-auth-layout";
-import { AuthForm } from "@/components/auth/AuthForm";
-import { AuthFormField } from "@/components/auth/AuthFormField";
-import { AuthFormControl } from "@/components/auth/AuthFormControl";
-import { AuthFormError } from "@/components/auth/AuthFormError";
-import { AuthFormAction } from "@/components/auth/AuthFormAction";
-import { AuthFormAlternative } from "@/components/auth/AuthFormAlternative";
-import { AuthFormNavigation } from "@/components/auth/AuthFormNavigation";
+import { AuthForm } from "@/features/Auth/components/AuthForm";
+import { AuthFormField } from "@/features/Auth/components/AuthFormField";
+import { AuthFormControl } from "@/features/Auth/components/AuthFormControl";
+import { AuthFormError } from "@/features/Auth/components/AuthFormError";
+import { AuthFormAction } from "@/features/Auth/components/AuthFormAction";
+import { AuthFormAlternative } from "@/features/Auth/components/AuthFormAlternative";
+import { AuthFormNavigation } from "@/features/Auth/components/AuthFormNavigation";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
